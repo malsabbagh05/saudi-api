@@ -149,9 +149,11 @@ is set up, and record any later change here.
   approvals after reviewable changes. `development` and `staging` require one
   approval; `main` requires two. All allow squash merge only and block force pushes
   and deletion. `development` also requires linear history. A commit subject ending
-  with the issue or pull-request number is not a ruleset rule: GitHub refuses
-  `commit_message_pattern` on a repository owned by a personal account (HTTP 422,
-  2026-10-22), so `merge-on-green` enforces it when it sets the squash subject.
+  with the issue or pull-request number is not a ruleset rule: commit metadata rules
+  are offered to organizations on a GitHub Enterprise plan
+  ([available rules](https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)),
+  and the API refused `commit_message_pattern` here with HTTP 422 on 2026-10-22.
+  `merge-on-green` enforces the subject when it sets the squash subject.
 - The rulesets were created on 2026-10-22, when the repository became public:
   `development` (25634001), `staging` (25633970) and `main` (25633973). The bypass
   list is the repository admin role, which only `malsabbagh05` holds.
