@@ -23,7 +23,8 @@ def gh_json(endpoint: str) -> dict[str, object] | list[dict[str, object]]:
         ["gh", "api", endpoint],
         stdin=subprocess.DEVNULL,
         capture_output=True,
-        text=True,
+        # gh writes UTF-8; text mode alone would decode with the locale's code page.
+        encoding="utf-8",
     )
     if result.returncode:
         print(result.stderr, end="", file=sys.stderr)
