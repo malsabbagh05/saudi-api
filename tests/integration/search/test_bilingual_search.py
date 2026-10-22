@@ -25,7 +25,8 @@ EVALUATION = [
     pytest.param("السجل التجاري", {"wathq-commercial-registration"}, id="ar-commercial-register"),
     pytest.param("البيانات المفتوحة", {"rcrc-open-data", "datasaudi"}, id="ar-open-data"),
     pytest.param("مترو", {"rcrc-open-data"}, id="ar-metro"),
-    pytest.param("الاحصاء", {"datasaudi"}, id="ar-statistics"),
+    pytest.param("الاحصاء", {"datasaudi", "gastat-developer-portal"}, id="ar-statistics"),
+    pytest.param("الهيئة العامة للإحصاء", {"gastat-developer-portal"}, id="ar-gastat"),
     pytest.param(
         "national address", {"spl-national-address", "wathq-national-address"}, id="en-address"
     ),
@@ -37,6 +38,7 @@ EVALUATION = [
     ),
     pytest.param("buy now pay later", {"tamara-payments", "tabby-payments"}, id="en-bnpl"),
     pytest.param("sms", {"taqnyat-messaging"}, id="en-sms"),
+    pytest.param("gastat developer portal", {"gastat-developer-portal"}, id="en-gastat"),
 ]
 
 

@@ -42,7 +42,7 @@ URLs and JSON stay left-to-right inside Arabic pages.
 ## Capabilities and Constraints
 
 - Web directory (Next.js), REST API under /v1, MCP at /mcp, llms.txt.
-- Catalogue: 21 APIs from 17 providers in 16 sectors, and 252 discovered datasets
+- Catalogue: 22 APIs from 18 providers in 16 sectors, and 252 discovered datasets
   (2026-10-22); grows by reviewed pull requests to catalog/.
 - Reachability checks show whether each API answered, and from where.
 - The platform never holds provider credentials; agents invoke only keyless APIs whose
