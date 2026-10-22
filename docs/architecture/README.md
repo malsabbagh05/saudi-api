@@ -19,3 +19,4 @@ The architecture rules in `AGENTS.md` hold until an ADR here replaces one.
 - [ADR-002: Catalogue authority and its database projection](./adr-002-catalogue-authority.md)
 - [ADR-003: Bilingual search in PostgreSQL](./adr-003-bilingual-search.md)
 - [ADR-004: Outbound requests, provider usage policy and scheduled jobs](./adr-004-outbound-requests-and-jobs.md)
+- [ADR-005: First deployment on Google Cloud in Dammam](./adr-005-deployment.md) (proposed)
