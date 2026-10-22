@@ -147,3 +147,38 @@ def test_the_budget_refuses_with_a_retry_time_once_spent():
             )
     assert error.value.code is RefusalCode.BUDGET_EXHAUSTED
     assert error.value.retry_after_seconds and error.value.retry_after_seconds > 0
+
+
+def test_each_process_takes_its_share_of_the_budget():
+    with provider_server({"/data": Route(body=b"ok")}) as server:
+        outbound = client(outbound_processes=2)
+        for _ in range(2):
+            outbound.get(
+                f"{server.url}/data", allowed_hosts=LOOPBACK, per_minute=4, wait_for_budget=False
+            )
+        with pytest.raises(OutboundRefused) as error:
+            outbound.get(
+                f"{server.url}/data", allowed_hosts=LOOPBACK, per_minute=4, wait_for_budget=False
+            )
+    assert error.value.code is RefusalCode.BUDGET_EXHAUSTED
+    # Two requests a minute refill a token in at most 30 seconds; the whole budget of four
+    # would refill one in at most 15.
+    assert error.value.retry_after_seconds is not None
+    assert 15 < error.value.retry_after_seconds <= 30
+
+
+def test_a_share_below_one_request_a_minute_still_allows_one():
+    with provider_server({"/data": Route(body=b"ok")}) as server:
+        outbound = client(outbound_processes=2)
+        outbound.get(
+            f"{server.url}/data", allowed_hosts=LOOPBACK, per_minute=1, wait_for_budget=False
+        )
+        with pytest.raises(OutboundRefused) as error:
+            outbound.get(
+                f"{server.url}/data", allowed_hosts=LOOPBACK, per_minute=1, wait_for_budget=False
+            )
+    assert error.value.code is RefusalCode.BUDGET_EXHAUSTED
+    # Half a request a minute refills a token in at most 120 seconds; the whole budget of
+    # one would refill it in at most 60.
+    assert error.value.retry_after_seconds is not None
+    assert 60 < error.value.retry_after_seconds <= 120

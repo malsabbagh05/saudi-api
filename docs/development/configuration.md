@@ -22,6 +22,7 @@ file (`AGENTS.md`, "Development environment"): `.env.development` locally, copie
 | `OUTBOUND_TOTAL_TIMEOUT_SECONDS` | `20` | Deadline for one provider request, redirects included: about 12 times the slowest response measured (1.68 s, DataSaudi `/cubes`, 572 KB). |
 | `OUTBOUND_MAX_RESPONSE_BYTES` | `4194304` | Largest provider body read: the MCP SDK's `max_request_body_size`, the largest single message the stack accepts. |
 | `OUTBOUND_ALLOW_LOOPBACK_HTTP` | `false` | Development and test only: allow `http://` to loopback addresses, the explicit opt-out the MCP security guidance asks for. Refused in production. |
+| `OUTBOUND_PROCESSES` | `1` | How many processes of the deployment send provider requests at once (API instances plus jobs). Each process keeps its own per-host budget and takes this share of a catalogue entry's `usage.max_requests_per_minute`, so together they stay within it (ADR-004). A share below one request a minute still allows one request. |
 | `CHECK_REGION` | `unspecified` | Where reachability checks run from; shown with every result, because several Saudi hosts refuse connections from abroad. |
 | `DISCOVER_INTERVAL_SECONDS` | `86400` | How often the worker refreshes discovered datasets. |
 | `CHECK_INTERVAL_SECONDS` | `3600` | How often the worker checks each API's reachability. |

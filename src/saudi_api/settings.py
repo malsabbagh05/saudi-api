@@ -58,6 +58,10 @@ class Settings(BaseSettings):
     # Development and test only: allow http:// to loopback addresses, the explicit opt-out
     # the MCP security guidance calls for. Refused when environment is production.
     outbound_allow_loopback_http: bool = False
+    # How many processes of this deployment send provider requests at the same time. Each
+    # process keeps its own per-host budget, so each takes this share of a catalogue
+    # budget and together they stay within it (ADR-004).
+    outbound_processes: int = Field(default=1, ge=1)
     # Where checks run from, recorded with each result so a block reads as a block.
     check_region: str = Field(default="unspecified", max_length=64)
 
