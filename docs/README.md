@@ -14,6 +14,7 @@ repeating it.
 - [Catalogue files](./development/catalogue.md)
 - [Configuration](./development/configuration.md)
 - [Operations](./development/operations.md)
+- [Deployment](./development/deployment.md)
 - [Web app](./development/web.md)
 
 ## Development

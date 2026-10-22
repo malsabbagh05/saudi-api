@@ -1,5 +1,5 @@
-# Local development stack. It is not a deployment path (AGENTS.md, "Development
-# environment"): the project owner decides that in an ADR before the first deployment.
+# Local development stack. It is not a deployment path: deploy/compose.yaml is, with
+# docs/development/deployment.md (ADR-005).
 #
 #   docker compose up --build        database, migrations and sync, API, worker, web
 #   docker compose up db             only the database, for running the API from source
