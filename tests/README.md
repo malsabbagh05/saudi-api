@@ -62,6 +62,10 @@ In a pull request, list the exact node IDs in the body's `tests` block; the
 test after 60 seconds. A test that needs longer declares
 `@pytest.mark.timeout(<seconds>)` with a comment giving the reason.
 
+Give every parametrized case an explicit id (`ids=` or `pytest.param(..., id=...)`) made
+of letters, digits and `_.,:=+/-`. CI rejects any other node ID, and pytest cannot select
+a case whose generated id holds spaces or Arabic text.
+
 Each new test must fail without the change. To prove it, commit the work, put the
 base source back with `git checkout origin/development -- src`, run the new tests,
 and restore with `git checkout HEAD -- src`. `PYTHONPATH` cannot do this: the

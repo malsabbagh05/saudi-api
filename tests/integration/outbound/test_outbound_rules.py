@@ -44,6 +44,7 @@ def test_a_catalogued_host_is_fetched():
         ("ftp://127.0.0.1/", RefusalCode.SCHEME_NOT_ALLOWED),
         ("https://user:secret@127.0.0.1/", RefusalCode.SCHEME_NOT_ALLOWED),
     ],
+    ids=["host-not-catalogued", "ftp-scheme", "userinfo"],
 )
 def test_requests_outside_the_rules_are_refused_before_sending(url, code):
     with pytest.raises(OutboundRefused) as error:

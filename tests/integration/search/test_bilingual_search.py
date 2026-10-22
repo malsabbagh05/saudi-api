@@ -15,18 +15,28 @@ from saudi_api.models import ApiRow
 from tests.support.catalog import REPOSITORY_CATALOG, sync
 from tests.support.postgres import postgres_engine
 
+# Each case has an ASCII id: CI selects cases by node ID (scripts/ci/listed_tests.py),
+# and pytest cannot select an id that holds spaces or Arabic text.
 EVALUATION = [
-    ("العنوان الوطني", {"spl-national-address", "wathq-national-address"}),
-    ("الفوترة الإلكترونية", {"zatca-e-invoicing"}),
-    ("السجل التجاري", {"wathq-commercial-registration"}),
-    ("البيانات المفتوحة", {"rcrc-open-data", "datasaudi"}),
-    ("مترو", {"rcrc-open-data"}),
-    ("الاحصاء", {"datasaudi"}),
-    ("national address", {"spl-national-address", "wathq-national-address"}),
-    ("e-invoicing", {"zatca-e-invoicing"}),
-    ("open banking", {"alrajhi-open-banking", "sama-open-banking", "lean-open-banking"}),
-    ("buy now pay later", {"tamara-payments", "tabby-payments"}),
-    ("sms", {"taqnyat-messaging"}),
+    pytest.param(
+        "العنوان الوطني", {"spl-national-address", "wathq-national-address"}, id="ar-address"
+    ),
+    pytest.param("الفوترة الإلكترونية", {"zatca-e-invoicing"}, id="ar-e-invoicing"),
+    pytest.param("السجل التجاري", {"wathq-commercial-registration"}, id="ar-commercial-register"),
+    pytest.param("البيانات المفتوحة", {"rcrc-open-data", "datasaudi"}, id="ar-open-data"),
+    pytest.param("مترو", {"rcrc-open-data"}, id="ar-metro"),
+    pytest.param("الاحصاء", {"datasaudi"}, id="ar-statistics"),
+    pytest.param(
+        "national address", {"spl-national-address", "wathq-national-address"}, id="en-address"
+    ),
+    pytest.param("e-invoicing", {"zatca-e-invoicing"}, id="en-e-invoicing"),
+    pytest.param(
+        "open banking",
+        {"alrajhi-open-banking", "sama-open-banking", "lean-open-banking"},
+        id="en-open-banking",
+    ),
+    pytest.param("buy now pay later", {"tamara-payments", "tabby-payments"}, id="en-bnpl"),
+    pytest.param("sms", {"taqnyat-messaging"}, id="en-sms"),
 ]
 
 
