@@ -27,6 +27,7 @@ EVALUATION = [
     pytest.param("مترو", {"rcrc-open-data"}, id="ar-metro"),
     pytest.param("الاحصاء", {"datasaudi", "gastat-developer-portal"}, id="ar-statistics"),
     pytest.param("الهيئة العامة للإحصاء", {"gastat-developer-portal"}, id="ar-gastat"),
+    pytest.param("جيديا", {"geidea-payments"}, id="ar-geidea"),
     pytest.param(
         "national address", {"spl-national-address", "wathq-national-address"}, id="en-address"
     ),
@@ -39,6 +40,7 @@ EVALUATION = [
     pytest.param("buy now pay later", {"tamara-payments", "tabby-payments"}, id="en-bnpl"),
     pytest.param("sms", {"taqnyat-messaging"}, id="en-sms"),
     pytest.param("gastat developer portal", {"gastat-developer-portal"}, id="en-gastat"),
+    pytest.param("geidea payment links", {"geidea-payments"}, id="en-geidea"),
 ]
 
 
