@@ -43,6 +43,7 @@ def test_catalog_check_reports_every_problem_and_fails(tmp_path, capsys):
         ),
         ({"documentation_url": "http://provider.example/docs"}, "must be an https:// URL"),
     ],
+    ids=["api-key-location", "auth-none-is-open", "auth-none-alone", "https-only"],
 )
 def test_access_and_url_rules(tmp_path, overrides, message):
     directory = new_catalog(tmp_path)
