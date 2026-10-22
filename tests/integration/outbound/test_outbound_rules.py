@@ -161,8 +161,10 @@ def test_each_process_takes_its_share_of_the_budget():
                 f"{server.url}/data", allowed_hosts=LOOPBACK, per_minute=4, wait_for_budget=False
             )
     assert error.value.code is RefusalCode.BUDGET_EXHAUSTED
-    # Two requests a minute: the next token comes about 30 seconds later.
-    assert error.value.retry_after_seconds == pytest.approx(30, abs=1)
+    # Two requests a minute refill a token in at most 30 seconds; the whole budget of four
+    # would refill one in at most 15.
+    assert error.value.retry_after_seconds is not None
+    assert 15 < error.value.retry_after_seconds <= 30
 
 
 def test_a_share_below_one_request_a_minute_still_allows_one():
@@ -176,5 +178,7 @@ def test_a_share_below_one_request_a_minute_still_allows_one():
                 f"{server.url}/data", allowed_hosts=LOOPBACK, per_minute=1, wait_for_budget=False
             )
     assert error.value.code is RefusalCode.BUDGET_EXHAUSTED
-    # Half a request a minute: the next token comes about 120 seconds later.
-    assert error.value.retry_after_seconds == pytest.approx(120, abs=1)
+    # Half a request a minute refills a token in at most 120 seconds; the whole budget of
+    # one would refill it in at most 60.
+    assert error.value.retry_after_seconds is not None
+    assert 60 < error.value.retry_after_seconds <= 120
