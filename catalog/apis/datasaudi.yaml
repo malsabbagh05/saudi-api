@@ -1,0 +1,161 @@
+slug: datasaudi
+provider: ministry-of-economy-and-planning
+name:
+  en: DataSaudi statistics API
+  ar: واجهة داتا السعودية للإحصاءات
+summary:
+  en: Keyless access to official statistics from GASTAT, SAMA, ministries and other publishers, in Arabic and English.
+  ar: وصول دون مفتاح إلى الإحصاءات الرسمية من الهيئة العامة للإحصاء والبنك المركزي السعودي والوزارات وجهات أخرى، بالعربية والإنجليزية.
+description:
+  en: >-
+    DataSaudi is the Ministry of Economy and Planning's platform for economic and social data. Its
+    pages read a Tesseract OLAP server that answers public requests without a key. The cubes endpoint
+    lists every dataset (a cube) with its measures, dimensions and bilingual titles; the query endpoint
+    returns a cube's figures broken down by the levels you choose; the members endpoint lists a level's
+    values for filtering with the include parameter. Most cubes are published by the General Authority
+    for Statistics (GASTAT) and the Saudi Central Bank (SAMA). DataSaudi does not publish separate API
+    documentation, so this entry describes the requests its own pages make. The catalogue refreshes
+    the dataset list every day.
+  ar: >-
+    داتا السعودية منصة وزارة الاقتصاد والتخطيط للبيانات الاقتصادية والاجتماعية. تقرأ صفحاتها من خادم
+    Tesseract للتحليل متعدد الأبعاد يجيب عن الطلبات العامة دون مفتاح. تسرد نقطة المكعبات كل مجموعة
+    بيانات (مكعب) بمقاييسها وأبعادها وعناوينها بالعربية والإنجليزية، وتعيد نقطة الاستعلام أرقام المكعب
+    موزعة على المستويات التي تختارها، وتسرد نقطة الأعضاء قيم المستوى لتصفية النتائج بالمعامل include.
+    تنشر معظم المكعبات الهيئة العامة للإحصاء والبنك المركزي السعودي. لا تنشر داتا السعودية توثيقاً
+    مستقلاً لهذه الواجهة، لذا يصف هذا المدخل الطلبات التي تجريها صفحاتها نفسها. يحدّث الدليل قائمة
+    مجموعات البيانات يومياً.
+sectors: [statistics, open-data, economy, labor, health]
+tags: [gastat, sama, census, gdp, inflation, labour market, olap]
+documentation_url: https://datasaudi.sa/en/data-explorer
+base_urls:
+  - url: https://api.datasaudi.sa/tesseract
+formats: [json, csv]
+access:
+  level: open
+  auth: [none]
+  pricing: free
+usage:
+  agent_invocation: allowed
+  max_requests_per_minute: 60
+  policy_evidence:
+    - https://www.stats.gov.sa/en/w/policies-of-saudi-arabia-s-statistics-dissemination-1
+  notes:
+    en: >-
+      GASTAT's dissemination policy makes official statistics available to everyone at the same
+      time. api.datasaudi.sa publishes no robots.txt (404), which RFC 9309 reads as no restriction.
+      The platform licence that DataSaudi links on the Digital Government Authority's registry could
+      not be opened from outside Saudi Arabia on 2026-10-22. Cite the original publisher named in
+      each dataset when you reuse its figures.
+    ar: >-
+      تتيح سياسة النشر لدى الهيئة العامة للإحصاء الإحصاءات الرسمية للجميع في الوقت نفسه. لا ينشر
+      api.datasaudi.sa ملف robots.txt (الاستجابة 404)، ويعد المعيار RFC 9309 ذلك إذناً دون قيود.
+      تعذّر فتح ترخيص المنصة الذي تشير إليه داتا السعودية في سجل هيئة الحكومة الرقمية من خارج
+      المملكة في 2026-10-22. اذكر الجهة الناشرة الأصلية المبيّنة في كل مجموعة بيانات عند إعادة
+      استخدام أرقامها.
+check:
+  url: https://api.datasaudi.sa/tesseract/
+discovery:
+  kind: tesseract_cubes
+  base_url: https://api.datasaudi.sa/tesseract
+endpoints:
+  - id: list-cubes
+    method: GET
+    path: /cubes
+    summary:
+      en: List every dataset with its measures, dimensions and bilingual annotations.
+      ar: سرد كل مجموعات البيانات بمقاييسها وأبعادها وبياناتها الوصفية بالعربية والإنجليزية.
+    parameters:
+      - name: locale
+        in: query
+        description: { en: Language of captions., ar: لغة التسميات. }
+        example: en
+        allowed_values: [en, ar]
+  - id: describe-cube
+    method: GET
+    path: /cubes/{cube}
+    summary:
+      en: One dataset's measures, dimensions, levels and source.
+      ar: مقاييس مجموعة بيانات واحدة وأبعادها ومستوياتها ومصدرها.
+    parameters:
+      - name: cube
+        in: path
+        required: true
+        description: { en: The dataset (cube) name., ar: اسم مجموعة البيانات (المكعب). }
+        example: avg_monthly_wages_per_paid_employee
+      - name: locale
+        in: query
+        description: { en: Language of captions., ar: لغة التسميات. }
+        example: en
+        allowed_values: [en, ar]
+  - id: query-cube
+    method: GET
+    path: /data.jsonrecords
+    summary:
+      en: A dataset's figures by the levels you choose, as JSON records.
+      ar: أرقام مجموعة البيانات موزعة على المستويات التي تختارها، بصيغة سجلات JSON.
+    parameters:
+      - name: cube
+        in: query
+        required: true
+        description: { en: The dataset (cube) name., ar: اسم مجموعة البيانات (المكعب). }
+        example: avg_monthly_wages_per_paid_employee
+      - name: drilldowns
+        in: query
+        required: true
+        description:
+          en: Comma-separated level names to group by; include every required dimension.
+          ar: أسماء المستويات المطلوب التجميع عليها مفصولة بفواصل، مع كل بُعد مطلوب.
+        example: Quarter
+      - name: measures
+        in: query
+        required: true
+        description: { en: Comma-separated measure names., ar: أسماء المقاييس مفصولة بفواصل. }
+        example: Average Wage
+      - name: include
+        in: query
+        description:
+          en: "Filter one level to member keys, as Level:key1,key2."
+          ar: "تصفية مستوى على مفاتيح أعضاء محددة بالصيغة Level:key1,key2."
+        example: "Quarter:20231,20232"
+      - name: limit
+        in: query
+        description:
+          en: "Page size and offset, as size,offset."
+          ar: "حجم الصفحة والإزاحة بالصيغة size,offset."
+        example: "100,0"
+      - name: locale
+        in: query
+        description: { en: Language of captions., ar: لغة التسميات. }
+        example: en
+        allowed_values: [en, ar]
+    response_example: >-
+      {"page":{"limit":3,"offset":0,"total":38},"columns":["Quarter ID","Quarter","Average Wage"],
+      "data":[{"Quarter ID":20171,"Quarter":"2017-Q1","Average Wage":6324.56}]}
+  - id: list-members
+    method: GET
+    path: /members
+    summary:
+      en: The values (members) of one level, with the keys the include parameter takes.
+      ar: قيم مستوى واحد (أعضاؤه) مع المفاتيح التي يقبلها المعامل include.
+    parameters:
+      - name: cube
+        in: query
+        required: true
+        description: { en: The dataset (cube) name., ar: اسم مجموعة البيانات (المكعب). }
+        example: avg_monthly_wages_per_paid_employee
+      - name: level
+        in: query
+        required: true
+        description: { en: The level name., ar: اسم المستوى. }
+        example: Quarter
+      - name: locale
+        in: query
+        description: { en: Language of captions., ar: لغة التسميات. }
+        example: en
+        allowed_values: [en, ar]
+verification:
+  checked_on: 2026-10-22
+  method: live_request
+  evidence:
+    - https://api.datasaudi.sa/tesseract/cubes?locale=en
+    - https://datasaudi.sa/en

@@ -1,0 +1,82 @@
+# Local development stack. It is not a deployment path (AGENTS.md, "Development
+# environment"): the project owner decides that in an ADR before the first deployment.
+#
+#   docker compose up --build        database, migrations and sync, API, worker, web
+#   docker compose up db             only the database, for running the API from source
+#
+# Settings come from the ignored .env.development (see .env.example); ENV_FILE points at
+# another file, such as the main checkout's from a task worktree.
+name: saudi-api
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: saudi_api
+      # Bound to 127.0.0.1 below, so trust authentication never leaves this machine.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "saudi_api"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # The release steps: migrations, then the catalogue projection (ADR-002).
+  release:
+    image: saudi-api:local
+    pull_policy: never
+    env_file: ${ENV_FILE:-.env.development}
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres@db:5432/saudi_api
+    command: ["sh", "-c", "saudi-api migrate && saudi-api catalog sync"]
+    # The image's healthcheck probes the HTTP server, which only the api service runs.
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build: .
+    image: saudi-api:local
+    env_file: ${ENV_FILE:-.env.development}
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres@db:5432/saudi_api
+    command: ["saudi-api", "serve", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      release:
+        condition: service_completed_successfully
+
+  worker:
+    image: saudi-api:local
+    pull_policy: never
+    env_file: ${ENV_FILE:-.env.development}
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres@db:5432/saudi_api
+    command: ["saudi-api", "worker"]
+    healthcheck:
+      disable: true
+    depends_on:
+      release:
+        condition: service_completed_successfully
+
+  web:
+    build: ./web
+    image: saudi-api-web:local
+    environment:
+      API_BASE_URL: http://api:8000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  db-data:

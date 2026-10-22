@@ -1,0 +1,51 @@
+slug: zid-merchant
+provider: zid
+name:
+  en: Zid Merchant API
+  ar: واجهة زد للتجار
+summary:
+  en: Work with a Zid store's orders, products and settings through an app the merchant authorises.
+  ar: العمل على طلبات متجر زد ومنتجاته وإعداداته عبر تطبيق يفوضه التاجر.
+description:
+  en: >-
+    Zid's Merchant APIs let partner apps read and manage a store's orders, products, customers and
+    other resources. Apps obtain access through OAuth; each request carries the app's authorization
+    token in the Authorization header and the store manager's token in the X-Manager-Token header.
+  ar: >-
+    تتيح واجهات زد للتجار لتطبيقات الشركاء قراءة طلبات المتجر ومنتجاته وعملائه وموارده الأخرى وإدارتها.
+    تحصل التطبيقات على الوصول عبر OAuth، ويحمل كل طلب رمز تفويض التطبيق في ترويسة Authorization ورمز
+    مدير المتجر في ترويسة X-Manager-Token.
+sectors: [e-commerce, commerce]
+tags: [zid, online store, orders, products, oauth]
+documentation_url: https://docs.zid.sa/start-here
+base_urls:
+  - url: https://api.zid.sa
+formats: [json]
+access:
+  level: registration
+  auth: [oauth2]
+  pricing: unknown
+  notes:
+    en: Send both "Authorization Bearer <token>" and "X-Manager-Token <manager token>".
+    ar: أرسل الترويستين "Authorization Bearer <token>" و"X-Manager-Token <رمز المدير>".
+check:
+  url: https://docs.zid.sa/start-here
+endpoints:
+  - id: list-orders
+    method: GET
+    path: /v1/managers/store/orders
+    summary:
+      en: List the store's orders.
+      ar: سرد طلبات المتجر.
+    parameters:
+      - name: X-Manager-Token
+        in: header
+        required: true
+        description: { en: The store manager's access token., ar: رمز وصول مدير المتجر. }
+        example: $MANAGER_TOKEN
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://docs.zid.sa/start-here.md
+    - https://docs.zid.sa/list-of-orders.md

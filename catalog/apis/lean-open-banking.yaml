@@ -1,0 +1,51 @@
+slug: lean-open-banking
+provider: lean-technologies
+name:
+  en: Lean open banking and payments API
+  ar: واجهة لين للمصرفية المفتوحة والمدفوعات
+summary:
+  en: Connect bank accounts, read account data and initiate payments, with a Saudi edition of the API.
+  ar: ربط الحسابات البنكية وقراءة بياناتها وبدء المدفوعات، مع إصدار من الواجهة مخصص للسعودية.
+description:
+  en: >-
+    Lean provides open banking and payments APIs: create a customer, connect it to a bank, then read
+    accounts, balances, transactions and income data, verify names, and run payments and payouts.
+    Applications authenticate with OAuth: they exchange their client credentials for a short-lived
+    access token (a JWT) and send it as a Bearer token. The API reference has a KSA edition (v2.0-KSA)
+    beside the UAE and global editions.
+  ar: >-
+    تقدم لين واجهات للمصرفية المفتوحة والمدفوعات: أنشئ عميلاً واربطه بالبنك، ثم اقرأ الحسابات والأرصدة
+    والعمليات وبيانات الدخل، وتحقق من الأسماء، ونفّذ المدفوعات والتحويلات الصادرة. تُوثَّق التطبيقات
+    بـ OAuth، إذ تستبدل بيانات اعتمادها برمز وصول قصير الأجل (JWT) ترسله بصيغة Bearer. يضم مرجع الواجهة
+    إصداراً للسعودية (v2.0-KSA) إلى جانب إصدارَي الإمارات والإصدار العالمي.
+sectors: [finance, payments]
+tags: [open banking, payments, payouts, account data, fintech]
+documentation_url: https://docs.leantech.me/docs/authentication
+signup_url: https://docs.leantech.me/docs/authentication
+base_urls:
+  - url: https://api.leantech.me
+    environment: production
+formats: [json]
+access:
+  level: registration
+  auth: [oauth2]
+  pricing: unknown
+  notes:
+    en: Start with an account on Lean's Application Dashboard, which issues the client credentials.
+    ar: ابدأ بحساب في لوحة تطبيقات لين، التي تصدر بيانات اعتماد العميل.
+check:
+  url: https://docs.leantech.me/docs/authentication
+endpoints:
+  - id: create-customer
+    method: POST
+    path: /customers/v1
+    summary:
+      en: Create the customer object that bank connections and payments belong to.
+      ar: إنشاء كائن العميل الذي تنتمي إليه الروابط البنكية والمدفوعات.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://docs.leantech.me/docs/authentication
+    - https://docs.leantech.me/reference/postoauth2token.md
+    - https://docs.leantech.me/llms.txt

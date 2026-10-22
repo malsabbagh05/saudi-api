@@ -1,0 +1,65 @@
+slug: tabby-payments
+provider: tabby
+name:
+  en: Tabby API
+  ar: واجهة تابي
+summary:
+  en: Create Tabby checkout sessions and manage payments, captures, refunds, webhooks and disputes on the Saudi domain.
+  ar: إنشاء جلسات الدفع في تابي وإدارة المدفوعات والقبض والاسترداد والإشعارات والنزاعات على النطاق السعودي.
+description:
+  en: >-
+    Tabby's API covers checkout sessions, payment retrieval, captures, refunds and closing, webhooks
+    and disputes. Merchants in Saudi Arabia use the KSA base URL api.tabby.sa; paths and payloads are
+    the same as on the UAE domain. Requests carry the merchant's secret key as a Bearer token. Tabby
+    publishes an OpenAPI 3.1 description, which the catalogue keeps current.
+  ar: >-
+    تغطي واجهة تابي جلسات الدفع واسترجاع المدفوعات والقبض والاسترداد والإغلاق والإشعارات والنزاعات.
+    يستخدم التجار في السعودية عنوان النطاق السعودي api.tabby.sa، والمسارات والحمولات مطابقة لنطاق الإمارات.
+    تحمل الطلبات المفتاح السري للتاجر بصيغة Bearer. تنشر تابي وصف OpenAPI 3.1 الذي يُبقيه الدليل محدَّثاً.
+sectors: [payments, finance, e-commerce]
+tags: [bnpl, buy now pay later, checkout, refunds, disputes]
+documentation_url: https://docs.tabby.ai/api-reference/overview
+openapi_url: https://docs.tabby.ai/openapi.yaml
+base_urls:
+  - url: https://api.tabby.sa
+formats: [json]
+access:
+  level: approval
+  auth: [bearer]
+  pricing: unknown
+  notes:
+    en: "The secret key travels as \"Authorization: Bearer <secret_key>\"; partner support for KSA is partner@tabby.sa."
+    ar: "يُرسل المفتاح السري بصيغة \"Authorization: Bearer <secret_key>\"، ودعم الشركاء في السعودية عبر partner@tabby.sa."
+check:
+  url: https://docs.tabby.ai/api-reference/overview
+endpoints:
+  - id: create-checkout-session
+    method: POST
+    path: /api/v2/checkout
+    summary:
+      en: Create a checkout session.
+      ar: إنشاء جلسة دفع.
+  - id: retrieve-payment
+    method: GET
+    path: /api/v2/payments/{id}
+    summary:
+      en: Retrieve a payment.
+      ar: استرجاع عملية دفع.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: { en: The payment id., ar: معرّف عملية الدفع. }
+        example: 00000000-0000-4000-8000-000000000000
+  - id: list-payments
+    method: GET
+    path: /api/v2/payments
+    summary:
+      en: List payments.
+      ar: سرد المدفوعات.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://docs.tabby.ai/api-reference/overview
+    - https://docs.tabby.ai/openapi.yaml

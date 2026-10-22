@@ -1,0 +1,82 @@
+# The sectors that group catalogue entries, in display order. Each API names one or more.
+sectors:
+  - slug: government
+    name: { en: Government services, ar: الخدمات الحكومية }
+    description:
+      en: Services and registries run by ministries and government authorities.
+      ar: خدمات وسجلات تديرها الوزارات والجهات الحكومية.
+  - slug: open-data
+    name: { en: Open data, ar: البيانات المفتوحة }
+    description:
+      en: Datasets published for anyone to use, under an open data licence.
+      ar: مجموعات بيانات منشورة ليستخدمها الجميع بموجب ترخيص البيانات المفتوحة.
+  - slug: statistics
+    name: { en: Statistics, ar: الإحصاءات }
+    description:
+      en: Official statistics on population, the economy, labour and society.
+      ar: الإحصاءات الرسمية عن السكان والاقتصاد وسوق العمل والمجتمع.
+  - slug: economy
+    name: { en: Economy, ar: الاقتصاد }
+    description:
+      en: Economic indicators, trade and investment.
+      ar: المؤشرات الاقتصادية والتجارة والاستثمار.
+  - slug: finance
+    name: { en: Banking and finance, ar: البنوك والمالية }
+    description:
+      en: Banks, open banking and financial technology.
+      ar: البنوك والمصرفية المفتوحة والتقنية المالية.
+  - slug: payments
+    name: { en: Payments, ar: المدفوعات }
+    description:
+      en: Payment gateways, wallets and buy-now-pay-later services.
+      ar: بوابات الدفع والمحافظ الرقمية وخدمات اشترِ الآن وادفع لاحقاً.
+  - slug: tax
+    name: { en: Tax and customs, ar: الزكاة والضريبة والجمارك }
+    description:
+      en: E-invoicing, tax registration and customs.
+      ar: الفوترة الإلكترونية والتسجيل الضريبي والجمارك.
+  - slug: commerce
+    name: { en: Commerce and business, ar: التجارة والأعمال }
+    description:
+      en: Commercial registration, company records and business verification.
+      ar: السجل التجاري وبيانات الشركات والتحقق من المنشآت.
+  - slug: e-commerce
+    name: { en: E-commerce, ar: التجارة الإلكترونية }
+    description:
+      en: Online store platforms and the merchant APIs they offer.
+      ar: منصات المتاجر الإلكترونية وواجهات التجار البرمجية التي تقدمها.
+  - slug: transport
+    name: { en: Transport and logistics, ar: النقل والخدمات اللوجستية }
+    description:
+      en: Public transport, roads, delivery and logistics.
+      ar: النقل العام والطرق والتوصيل والخدمات اللوجستية.
+  - slug: geospatial
+    name: { en: Addresses and maps, ar: العناوين والخرائط }
+    description:
+      en: The national address, geocoding and geographic data.
+      ar: العنوان الوطني والترميز الجغرافي والبيانات المكانية.
+  - slug: justice
+    name: { en: Justice, ar: العدل }
+    description:
+      en: Courts, enforcement, notarization and powers of attorney.
+      ar: المحاكم والتنفيذ والتوثيق والوكالات.
+  - slug: real-estate
+    name: { en: Real estate, ar: العقار }
+    description:
+      en: Property deeds and real estate transactions.
+      ar: الصكوك العقارية والتعاملات العقارية.
+  - slug: health
+    name: { en: Health, ar: الصحة }
+    description:
+      en: Health insurance, healthcare providers and health statistics.
+      ar: التأمين الصحي ومقدمو الرعاية الصحية والإحصاءات الصحية.
+  - slug: labor
+    name: { en: Labour and employment, ar: العمل والتوظيف }
+    description:
+      en: Employment records, wages and social insurance.
+      ar: سجلات التوظيف والأجور والتأمينات الاجتماعية.
+  - slug: telecom
+    name: { en: Communications, ar: الاتصالات }
+    description:
+      en: SMS, messaging and verification services.
+      ar: خدمات الرسائل النصية والمراسلة والتحقق.

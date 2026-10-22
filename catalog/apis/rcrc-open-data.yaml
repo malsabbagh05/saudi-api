@@ -1,0 +1,93 @@
+slug: rcrc-open-data
+provider: royal-commission-for-riyadh-city
+name:
+  en: Riyadh open data API
+  ar: واجهة البيانات المفتوحة لمدينة الرياض
+summary:
+  en: Riyadh's open datasets, including metro lines and stations, bus routes and stops, and traffic intersections.
+  ar: مجموعات البيانات المفتوحة لمدينة الرياض، ومنها خطوط المترو ومحطاته ومسارات الحافلات ومواقفها والتقاطعات المرورية.
+description:
+  en: >-
+    The Royal Commission for Riyadh City publishes its open data on an Opendatasoft portal whose
+    Explore API (v2.1) needs no key. The catalogue endpoint lists the datasets with bilingual field
+    labels; the records endpoint returns a dataset's rows, filtered and sorted with ODSQL. Datasets
+    carry the KSA Open Data Licence, which allows reuse with attribution. The portal's robots.txt
+    disallows the API path for automated agents other than search engines, so this platform neither
+    crawls it nor calls it for agents; call it from your own application.
+  ar: >-
+    تنشر الهيئة الملكية لمدينة الرياض بياناتها المفتوحة على بوابة Opendatasoft تتيح واجهة Explore
+    (الإصدار 2.1) دون مفتاح. تسرد نقطة الفهرس مجموعات البيانات مع تسميات الحقول بالعربية والإنجليزية،
+    وتعيد نقطة السجلات صفوف مجموعة البيانات مع إمكان التصفية والترتيب بلغة ODSQL. تحمل مجموعات البيانات
+    ترخيص البيانات المفتوحة في المملكة الذي يسمح بإعادة الاستخدام مع ذكر المصدر. يمنع ملف robots.txt في
+    البوابة مسار الواجهة على الوكلاء الآليين غير محركات البحث، لذلك لا تزحف هذه المنصة إليه ولا
+    تستدعيه نيابة عن الوكلاء؛ استدعه من تطبيقك.
+sectors: [open-data, transport, government]
+tags: [riyadh, metro, bus, traffic, opendatasoft, housing, population]
+documentation_url: https://opendata.rcrc.gov.sa/api/explore/v2.1/console
+base_urls:
+  - url: https://opendata.rcrc.gov.sa/api/explore/v2.1
+formats: [json, csv, geojson, xlsx]
+access:
+  level: open
+  auth: [none]
+  pricing: free
+  notes:
+    en: Datasets are under the KSA Open Data Licence; mention the source as the licence prescribes.
+    ar: مجموعات البيانات بموجب ترخيص البيانات المفتوحة في المملكة؛ اذكر المصدر كما يحدده الترخيص.
+usage:
+  agent_invocation: not_allowed
+  notes:
+    en: "robots.txt disallows /api/ for User-agent: * (fetched 2026-10-22)."
+    ar: "يمنع ملف robots.txt المسار /api/ على User-agent: * (تاريخ الجلب 2026-10-22)."
+check:
+  url: https://opendata.rcrc.gov.sa/pages/home-page/
+endpoints:
+  - id: list-datasets
+    method: GET
+    path: /catalog/datasets
+    summary:
+      en: List datasets with their metadata and bilingual field labels.
+      ar: سرد مجموعات البيانات مع بياناتها الوصفية وتسميات حقولها بالعربية والإنجليزية.
+    parameters:
+      - name: limit
+        in: query
+        type: integer
+        description:
+          en: Number of datasets to return (at most 100).
+          ar: عدد مجموعات البيانات المعادة (100 كحد أقصى).
+        example: "20"
+      - name: where
+        in: query
+        description:
+          en: An ODSQL filter on dataset metadata.
+          ar: شرط تصفية بلغة ODSQL على البيانات الوصفية.
+  - id: list-records
+    method: GET
+    path: /catalog/datasets/{dataset_id}/records
+    summary:
+      en: The rows of one dataset, filtered and sorted with ODSQL.
+      ar: صفوف مجموعة بيانات واحدة مع التصفية والترتيب بلغة ODSQL.
+    parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        description: { en: The dataset identifier., ar: معرّف مجموعة البيانات. }
+        example: metro-stations-in-riyadh-by-metro-line-and-station-type-2024
+      - name: limit
+        in: query
+        type: integer
+        description:
+          en: Number of records to return (at most 100).
+          ar: عدد السجلات المعادة (100 كحد أقصى).
+        example: "20"
+      - name: where
+        in: query
+        description:
+          en: An ODSQL filter on the records.
+          ar: شرط تصفية بلغة ODSQL على السجلات.
+verification:
+  checked_on: 2026-10-22
+  method: live_request
+  evidence:
+    - https://opendata.rcrc.gov.sa/api/explore/v2.1/catalog/datasets?limit=5
+    - https://opendata.rcrc.gov.sa/robots.txt

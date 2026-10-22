@@ -1,0 +1,107 @@
+[project]
+name = "saudi-api"
+version = "0.1.0"
+description = "An open, verified, bilingual catalogue of Saudi APIs for developers and AI agents."
+license = "Apache-2.0"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "alembic>=1.20",
+    "fastapi>=0.158",
+    "httpx>=0.28",
+    "mcp>=2.3",
+    "protego>=0.7",
+    "psycopg[binary]>=3.3",
+    "pydantic>=2.14",
+    "pydantic-settings>=2.16",
+    "pyyaml>=6.0.3",
+    "sqlalchemy>=2.0.54",
+    "uvicorn[standard]>=0.54",
+]
+
+[project.scripts]
+saudi-api = "saudi_api.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.21,<0.12"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1",
+    "pytest-timeout>=2.4",
+    "pytest-xdist>=3.8",
+    "ruff>=0.17",
+    "ty>=0.0.84",
+    "types-pyyaml>=6.0.12.20260906",
+]
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+pythonpath = ["src", "."]
+
+[tool.ty.environment]
+python-version = "3.14"
+python-platform = "all"
+root = ["src", "."]
+
+[tool.ty.src]
+include = ["src", "scripts", "migrations"]
+exclude = ["**/__pycache__", ".venv", "web", "tests", "**/tests/**", "**/test_*.py", "**/*_test.py", "**/conftest.py"]
+respect-ignore-files = false
+exclude-scripts = false
+
+[tool.ty.analysis]
+respect-type-ignore-comments = false
+strict-equality-semantics = true
+strict-generic-narrowing = true
+
+# Turn on the optional rules that catch unsound code. Leave a rule off only for a
+# named library API that the rule rejects, with the reason here.
+[tool.ty.rules]
+blanket-ignore-comment = "error"
+disjoint-cast = "error"
+dynamic-function-decorator-return = "error"
+missing-override-decorator = "error"
+missing-type-argument = "error"
+possibly-unresolved-reference = "warn"
+unsound-return-statement = "error"
+unsound-yield = "error"
+unsupported-dynamic-base = "warn"
+
+[tool.ty.terminal]
+error-on-warning = true
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+preview = false
+force-exclude = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+extend-select = ["ANN", "PYI", "PGH003", "PGH004", "RUF100", "RUF101", "RUF102", "B006", "B008", "B023", "B039", "RUF012", "TID251", "PLC0415", "S"]
+# Ignore a security rule only after reading every hit of it, with the reason here.
+ignore = [
+    # The project never runs Python with -O, so assertions stay.
+    "S101",
+    # Setting, key and error-code names that contain "password", "secret" or "token".
+    # The Trivy secret scan in Static checks finds real secrets.
+    "S105", "S106", "S107",
+]
+
+# Tests keep correctness and suppression checks without production annotation,
+# import-placement or security rules: no test code ships.
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN", "PYI", "TID251", "PLC0415", "S"]
+"**/test_*.py" = ["ANN", "PYI", "TID251", "PLC0415", "S"]
+"**/*_test.py" = ["ANN", "PYI", "TID251", "PLC0415", "S"]
+"**/conftest.py" = ["ANN", "PYI", "TID251", "PLC0415", "S"]
+# These scripts run gh, git and each other with fixed argument lists and no shell.
+".agents/skills/git-standards/scripts/*" = ["S603", "S607"]
+"scripts/ci/promotion-source" = ["S603", "S607"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"typing.Any".msg = "Use a meaningful type or validate dynamic data at the boundary."
+"typing_extensions.Any".msg = "Use a meaningful type or validate dynamic data at the boundary."
+"typing.no_type_check".msg = "Use a specific explained suppression instead of disabling function checking."
+"typing_extensions.no_type_check".msg = "Use a specific explained suppression instead of disabling function checking."

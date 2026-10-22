@@ -1,0 +1,67 @@
+# Version updates for the lockfiles on `development`. GitHub reads this file from the
+# default branch, `main`: keep the copies equal (docs/development/github-actions.md,
+# "Dependency updates"). List each ignored version with its reason and the condition
+# for removing it.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directory: /web
+    target-branch: development
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  # The base images the Dockerfiles pin by digest.
+  - package-ecosystem: docker
+    directories: ["/", "/web"]
+    target-branch: development
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  # The actions that the workflows pin by commit. The scheduled workflows also live
+  # on `main`, so the default branch has its own entry.
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]

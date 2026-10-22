@@ -1,0 +1,185 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* The rawashin world (.impeccable/surfaces/web-src-app.md): coral-stone ground, teak ink and
+   hairlines, the painted turquoise of Jeddah's carved window screens as the one accent.
+   Dark mode is the same street at night: teak ground, stone-white ink. */
+:root {
+  --background: oklch(0.936 0.006 75);
+  --foreground: oklch(0.255 0.032 52);
+  --card: oklch(0.962 0.005 75);
+  --card-foreground: oklch(0.255 0.032 52);
+  --popover: oklch(0.975 0.004 75);
+  --popover-foreground: oklch(0.255 0.032 52);
+  --primary: oklch(0.5 0.085 192);
+  --primary-foreground: oklch(0.985 0.004 192);
+  --secondary: oklch(0.905 0.012 70);
+  --secondary-foreground: oklch(0.3 0.035 52);
+  --muted: oklch(0.905 0.01 70);
+  --muted-foreground: oklch(0.45 0.03 55);
+  --accent: oklch(0.9 0.03 192);
+  --accent-foreground: oklch(0.3 0.06 192);
+  --destructive: oklch(0.5 0.15 32);
+  --border: oklch(0.8 0.02 62);
+  --input: oklch(0.78 0.022 62);
+  --ring: oklch(0.5 0.085 192);
+  --radius: 0.125rem;
+
+  --teak: oklch(0.34 0.045 50);
+  --lattice-open: oklch(0.5 0.085 192);
+  --lattice-shut: oklch(0.84 0.016 65);
+  --reach: oklch(0.47 0.09 150);
+  --degraded: oklch(0.55 0.12 70);
+  --blocked: oklch(0.5 0.15 32);
+  --code-bg: oklch(0.255 0.032 52);
+  --code-fg: oklch(0.93 0.01 80);
+  --selection: oklch(0.85 0.06 192);
+}
+
+.dark {
+  --background: oklch(0.205 0.018 52);
+  --foreground: oklch(0.93 0.008 75);
+  --card: oklch(0.24 0.02 52);
+  --card-foreground: oklch(0.93 0.008 75);
+  --popover: oklch(0.26 0.02 52);
+  --popover-foreground: oklch(0.93 0.008 75);
+  --primary: oklch(0.74 0.1 190);
+  --primary-foreground: oklch(0.2 0.03 190);
+  --secondary: oklch(0.29 0.022 52);
+  --secondary-foreground: oklch(0.9 0.01 75);
+  --muted: oklch(0.29 0.02 52);
+  --muted-foreground: oklch(0.74 0.02 70);
+  --accent: oklch(0.32 0.04 190);
+  --accent-foreground: oklch(0.9 0.04 190);
+  --destructive: oklch(0.68 0.15 32);
+  --border: oklch(0.36 0.024 52);
+  --input: oklch(0.4 0.026 52);
+  --ring: oklch(0.74 0.1 190);
+
+  --teak: oklch(0.8 0.03 60);
+  --lattice-open: oklch(0.74 0.1 190);
+  --lattice-shut: oklch(0.36 0.024 52);
+  --reach: oklch(0.72 0.12 150);
+  --degraded: oklch(0.78 0.13 75);
+  --blocked: oklch(0.7 0.15 32);
+  --code-bg: oklch(0.16 0.015 52);
+  --code-fg: oklch(0.93 0.01 80);
+  --selection: oklch(0.42 0.07 190);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: oklch(0.205 0.018 52);
+    --foreground: oklch(0.93 0.008 75);
+    --card: oklch(0.24 0.02 52);
+    --card-foreground: oklch(0.93 0.008 75);
+    --popover: oklch(0.26 0.02 52);
+    --popover-foreground: oklch(0.93 0.008 75);
+    --primary: oklch(0.74 0.1 190);
+    --primary-foreground: oklch(0.2 0.03 190);
+    --secondary: oklch(0.29 0.022 52);
+    --secondary-foreground: oklch(0.9 0.01 75);
+    --muted: oklch(0.29 0.02 52);
+    --muted-foreground: oklch(0.74 0.02 70);
+    --accent: oklch(0.32 0.04 190);
+    --accent-foreground: oklch(0.9 0.04 190);
+    --destructive: oklch(0.68 0.15 32);
+    --border: oklch(0.36 0.024 52);
+    --input: oklch(0.4 0.026 52);
+    --ring: oklch(0.74 0.1 190);
+    --teak: oklch(0.8 0.03 60);
+    --lattice-open: oklch(0.74 0.1 190);
+    --lattice-shut: oklch(0.36 0.024 52);
+    --reach: oklch(0.72 0.12 150);
+    --degraded: oklch(0.78 0.13 75);
+    --blocked: oklch(0.7 0.15 32);
+    --code-bg: oklch(0.16 0.015 52);
+    --selection: oklch(0.42 0.07 190);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-teak: var(--teak);
+  --color-lattice-open: var(--lattice-open);
+  --color-lattice-shut: var(--lattice-shut);
+  --color-reach: var(--reach);
+  --color-degraded: var(--degraded);
+  --color-blocked: var(--blocked);
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
+  --font-sans: var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--border) var(--background);
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "kern";
+    line-height: 1.6;
+  }
+  /* Arabic needs more line height than Latin at the same size (bilingual.md). */
+  html[lang="ar"] body {
+    line-height: 1.8;
+  }
+  ::selection {
+    background: var(--selection);
+    color: var(--foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

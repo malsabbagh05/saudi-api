@@ -1,0 +1,275 @@
+{
+ "name": "datasaudi",
+ "locales": [
+  "ar",
+  "en"
+ ],
+ "default_locale": "en",
+ "annotations": {},
+ "cubes": [
+  {
+   "name": "avg_monthly_wages_per_paid_employee",
+   "caption": "avg_monthly_wages_per_paid_employee",
+   "annotations": {
+    "source_name": "Labour Market Statistics (GASTAT)",
+    "source_link": "https://www.stats.gov.sa/en/statistics-tabs?tab=436312&category=417515",
+    "table_ar": "متوسط ​​الأجور الشهرية لكل موظف مدفوع الأجر في العمل الرئيسي حسب الجنسية والجنس والفئة العمرية - ربع سنوي",
+    "required_dimensions": "Quarter",
+    "source_name_ar": "إحصاءات سوق العمل (الهيئة العامة للإحصاء)",
+    "topic_en": "Social Indicators",
+    "subtopic_en": "Labor",
+    "subtopic_ar": "العمل",
+    "table_en": "Average Monthly Wages per Paid Employee in Main Work by Nationality, Sex, and Age Group - Quarterly",
+    "topic_ar": "المؤشرات الاجتماعية"
+   },
+   "dimensions": [
+    {
+     "name": "Quarter",
+     "caption": "Period",
+     "type": "time",
+     "annotations": {
+      "de_time_complete": "true"
+     },
+     "hierarchies": [
+      {
+       "name": "Date",
+       "caption": "Period",
+       "annotations": {},
+       "levels": [
+        {
+         "name": "Quarter",
+         "caption": "Quarter",
+         "depth": 1,
+         "count": 0,
+         "time_scale": "quarter",
+         "annotations": {},
+         "properties": []
+        }
+       ]
+      }
+     ],
+     "default_hierarchy": "Date"
+    },
+    {
+     "name": "Nationality",
+     "caption": "Nationality",
+     "type": "standard",
+     "annotations": {},
+     "hierarchies": [
+      {
+       "name": "Nationality",
+       "caption": "Nationality",
+       "annotations": {},
+       "levels": [
+        {
+         "name": "Nationality",
+         "caption": "Nationality",
+         "depth": 1,
+         "count": 0,
+         "time_scale": null,
+         "annotations": {
+          "vb_exclude_members": "3"
+         },
+         "properties": []
+        }
+       ]
+      }
+     ],
+     "default_hierarchy": "Nationality"
+    },
+    {
+     "name": "Sex",
+     "caption": "Sex",
+     "type": "standard",
+     "annotations": {},
+     "hierarchies": [
+      {
+       "name": "Sex",
+       "caption": "Sex",
+       "annotations": {},
+       "levels": [
+        {
+         "name": "Sex",
+         "caption": "Sex",
+         "depth": 1,
+         "count": 0,
+         "time_scale": null,
+         "annotations": {
+          "vb_exclude_members": "3"
+         },
+         "properties": []
+        }
+       ]
+      }
+     ],
+     "default_hierarchy": "Sex"
+    }
+   ],
+   "measures": [
+    {
+     "name": "Average Wage",
+     "caption": "Average Wage (⃁)",
+     "aggregator": "Average",
+     "annotations": {
+      "units_of_measurement": "Unit"
+     },
+     "attached": []
+    },
+    {
+     "name": "Average Salary Growth Rate (YoY)",
+     "caption": "Average Wage Growth Rate (YoY)",
+     "aggregator": "Average",
+     "annotations": {
+      "units_of_measurement": "Percentage"
+     },
+     "attached": []
+    }
+   ]
+  },
+  {
+   "name": "gastat_inflation",
+   "caption": "gastat_inflation",
+   "annotations": {
+    "source_name": "General Authority for Statistics (GASTAT)",
+    "source_link": "https://www.stats.gov.sa/en/statistics-tabs/-/categories/121421?tab=436312&category=121421",
+    "table_ar": "معدل تضخم الرقم القياسي لأسعار المستهلك حسب الباب الرئيس - شهري",
+    "suggested_levels": "Month",
+    "source_name_ar": "الهيئة العامة للإحصاء",
+    "topic_en": "Economic Indicators",
+    "subtopic_en": "Real Sector Indicators",
+    "subtopic_ar": "مؤشرات القطاع الحقيقي",
+    "table_en": "CPI Inflation Rate by Main Section - Monthly",
+    "topic_ar": "المؤشرات الاقتصادية"
+   },
+   "dimensions": [
+    {
+     "name": "Date Only Month",
+     "caption": "Period",
+     "type": "time",
+     "annotations": {
+      "de_time_complete": "true"
+     },
+     "hierarchies": [
+      {
+       "name": "Date",
+       "caption": "Period",
+       "annotations": {},
+       "levels": [
+        {
+         "name": "Month",
+         "caption": "Month",
+         "depth": 3,
+         "count": 0,
+         "time_scale": "month",
+         "annotations": {},
+         "properties": []
+        }
+       ]
+      }
+     ],
+     "default_hierarchy": "Date"
+    },
+    {
+     "name": "Main Division",
+     "caption": "Main Section",
+     "type": "standard",
+     "annotations": {},
+     "hierarchies": [
+      {
+       "name": "Main Division",
+       "caption": "Main Section",
+       "annotations": {},
+       "levels": [
+        {
+         "name": "Main Division",
+         "caption": "Main Section",
+         "depth": 1,
+         "count": 0,
+         "time_scale": null,
+         "annotations": {},
+         "properties": []
+        }
+       ]
+      }
+     ],
+     "default_hierarchy": "Main Division"
+    }
+   ],
+   "measures": [
+    {
+     "name": "Inflation",
+     "caption": "Consumer Price Index",
+     "aggregator": "Average",
+     "annotations": {
+      "units_of_measurement": "Unit"
+     },
+     "attached": []
+    },
+    {
+     "name": "Inflation rate",
+     "caption": "Inflation Rate",
+     "aggregator": "Average",
+     "annotations": {
+      "units_of_measurement": "Percentage Base 100"
+     },
+     "attached": []
+    }
+   ]
+  },
+  {
+   "name": "dim_countries",
+   "caption": "dim_countries",
+   "annotations": {
+    "hide_in_ui": "true",
+    "topic_en": "Dimensions",
+    "table_en": "Countries",
+    "subtopic": "Hidden"
+   },
+   "dimensions": [
+    {
+     "name": "Country",
+     "caption": "Country",
+     "type": "geo",
+     "annotations": {},
+     "hierarchies": [
+      {
+       "name": "Country",
+       "caption": "Country",
+       "annotations": {},
+       "levels": [
+        {
+         "name": "Continent",
+         "caption": "Continent",
+         "depth": 1,
+         "count": 0,
+         "time_scale": null,
+         "annotations": {},
+         "properties": []
+        },
+        {
+         "name": "Country",
+         "caption": "Country",
+         "depth": 2,
+         "count": 0,
+         "time_scale": null,
+         "annotations": {},
+         "properties": []
+        }
+       ]
+      }
+     ],
+     "default_hierarchy": "Country"
+    }
+   ],
+   "measures": [
+    {
+     "name": "Count",
+     "caption": "Count",
+     "aggregator": "Sum",
+     "annotations": {},
+     "attached": []
+    }
+   ]
+  }
+ ]
+}

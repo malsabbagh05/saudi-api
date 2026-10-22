@@ -1,0 +1,53 @@
+slug: wathq-national-address
+provider: saudi-post-spl
+name:
+  en: Business National Address API (Wathq)
+  ar: واجهة العنوان الوطني للمنشآت (واثق)
+summary:
+  en: The national address of a business, by its commercial registration number.
+  ar: العنوان الوطني للمنشأة برقم سجلها التجاري.
+description:
+  en: >-
+    Saudi Post | SPL offers businesses' national address data through Wathq: one request by
+    commercial registration number (or unified national number) returns the establishment's
+    registered national address.
+  ar: >-
+    يتيح البريد السعودي | سبل بيانات العنوان الوطني للمنشآت عبر منصة واثق: طلب واحد برقم السجل التجاري
+    (أو الرقم الوطني الموحد) يعيد العنوان الوطني المسجل للمنشأة.
+sectors: [geospatial, commerce]
+tags: [wathq, national address, business address, kyb]
+documentation_url: https://developer.wathq.sa/en/api/17
+openapi_url: https://developer.wathq.sa/sites/default/files/2023-11/SPLNew.yaml
+signup_url: https://developer.wathq.sa/en/apis
+terms_url: https://developer.wathq.sa/en/wathiq-terms/site
+base_urls:
+  - url: https://api.wathq.sa/spl/national/address
+formats: [json]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: paid
+  api_key: { in: header, name: apiKey }
+check:
+  url: https://developer.wathq.sa/en/api/17
+endpoints:
+  - id: address-info
+    method: GET
+    path: /info/{crNumber}
+    summary:
+      en: The establishment's national address.
+      ar: العنوان الوطني للمنشأة.
+    parameters:
+      - name: crNumber
+        in: path
+        required: true
+        description:
+          en: Commercial registration number or unified national number.
+          ar: رقم السجل التجاري أو الرقم الوطني الموحد.
+        example: "7000000000"
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.wathq.sa/en/api/17
+    - https://developer.wathq.sa/sites/default/files/2023-11/SPLNew.yaml

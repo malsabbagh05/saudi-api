@@ -1,0 +1,72 @@
+slug: salla-merchant
+provider: salla
+name:
+  en: Salla Merchant API
+  ar: واجهة سلة للتجار
+summary:
+  en: Read and manage a Salla store's orders, products, customers and more, through an app the merchant installs.
+  ar: قراءة طلبات متجر سلة ومنتجاته وعملائه وغيرها وإدارتها عبر تطبيق يثبّته التاجر.
+description:
+  en: >-
+    Salla's Merchant API lets apps built on the Salla Partners portal work with a merchant's store:
+    orders, order histories, products, quantities, customers, shipping and more, with webhooks for
+    store events. The merchant grants access through OAuth 2.0 (authorization code); the app sends
+    the resulting access token as a Bearer token. Building an app needs a Salla Partners account.
+  ar: >-
+    تتيح واجهة سلة للتجار للتطبيقات المبنية على بوابة شركاء سلة العمل على متجر التاجر: الطلبات وسجلها
+    والمنتجات والكميات والعملاء والشحن وغيرها، مع إشعارات لأحداث المتجر. يمنح التاجر الوصول عبر OAuth 2.0
+    (رمز التفويض)، ويرسل التطبيق رمز الوصول الناتج بصيغة Bearer. يتطلب بناء التطبيق حساباً في بوابة
+    شركاء سلة.
+sectors: [e-commerce, commerce]
+tags: [salla, online store, orders, products, webhooks, oauth]
+documentation_url: https://docs.salla.dev/authorization
+signup_url: https://docs.salla.dev/get-started
+base_urls:
+  - url: https://api.salla.dev/admin/v2
+formats: [json]
+access:
+  level: registration
+  auth: [oauth2]
+  pricing: unknown
+  notes:
+    en: Tokens come from https://accounts.salla.sa/oauth2/token after the merchant approves the app.
+    ar: تصدر الرموز من https://accounts.salla.sa/oauth2/token بعد موافقة التاجر على التطبيق.
+check:
+  url: https://docs.salla.dev/authorization
+endpoints:
+  - id: list-orders
+    method: GET
+    path: /orders
+    summary:
+      en: List the store's orders, filtered by status, dates, location or product.
+      ar: سرد طلبات المتجر مع التصفية حسب الحالة والتاريخ والموقع والمنتج.
+    parameters:
+      - name: status
+        in: query
+        description: { en: Filter by order status., ar: التصفية حسب حالة الطلب. }
+      - name: from_date
+        in: query
+        description: { en: Orders created on or after this date., ar: الطلبات المنشأة في هذا التاريخ أو بعده. }
+        example: "2026-01-01"
+  - id: list-products
+    method: GET
+    path: /products
+    summary:
+      en: List the store's products.
+      ar: سرد منتجات المتجر.
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        description: { en: Result page., ar: صفحة النتائج. }
+        example: "1"
+      - name: keyword
+        in: query
+        description: { en: Search products by keyword., ar: البحث عن المنتجات بكلمة. }
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://docs.salla.dev/authorization
+    - https://docs.salla.dev/orders/list.md
+    - https://docs.salla.dev/product/list-product.md

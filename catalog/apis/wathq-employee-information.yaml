@@ -1,0 +1,55 @@
+slug: wathq-employee-information
+provider: general-organization-for-social-insurance
+name:
+  en: Employee Information API (Wathq)
+  ar: واجهة معلومات الموظف (واثق)
+summary:
+  en: A person's private-sector employment, wages and employer relationships, from GOSI through MASDR.
+  ar: بيانات توظيف الشخص في القطاع الخاص وأجوره وعلاقاته بأصحاب العمل، من التأمينات الاجتماعية عبر مصدر.
+description:
+  en: >-
+    GOSI's MASDR service offers employment data through Wathq: one request by national ID or iqama
+    number returns the person's employment, wage and employer relationship records in the private
+    sector. The identifier travels in a request header, never in the URL.
+  ar: >-
+    تتيح خدمة مصدر لدى المؤسسة العامة للتأمينات الاجتماعية بيانات التوظيف عبر منصة واثق: طلب واحد برقم
+    الهوية أو الإقامة يعيد سجلات توظيف الشخص وأجوره وعلاقاته بأصحاب العمل في القطاع الخاص. يُرسل رقم
+    الهوية في ترويسة الطلب، لا في الرابط.
+sectors: [labor, government]
+tags: [wathq, masdr, gosi, employment, salary, verification]
+documentation_url: https://developer.wathq.sa/en/api/18
+openapi_url: https://developer.wathq.sa/sites/default/files/2025-12/Wathq%20Employee%20Information%20API_v1.0.1%20%284%29.yaml
+signup_url: https://developer.wathq.sa/en/apis
+terms_url: https://developer.wathq.sa/en/wathiq-terms/site
+base_urls:
+  - url: https://api.wathq.sa/masdr/employee
+formats: [json]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: paid
+  api_key: { in: header, name: apiKey }
+  notes:
+    en: Responses contain personal data; process them only on a lawful basis under the Personal Data Protection Law.
+    ar: تحتوي الاستجابات على بيانات شخصية؛ لا تعالجها إلا على أساس نظامي وفق نظام حماية البيانات الشخصية.
+check:
+  url: https://developer.wathq.sa/en/api/18
+endpoints:
+  - id: employee-info
+    method: GET
+    path: /v2/info
+    summary:
+      en: The person's employment information.
+      ar: معلومات توظيف الشخص.
+    parameters:
+      - name: id
+        in: header
+        required: true
+        description: { en: National ID or iqama number., ar: رقم الهوية أو الإقامة. }
+        example: "1000000000"
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.wathq.sa/en/api/18
+    - https://developer.wathq.sa/sites/default/files/2025-12/Wathq%20Employee%20Information%20API_v1.0.1%20%284%29.yaml

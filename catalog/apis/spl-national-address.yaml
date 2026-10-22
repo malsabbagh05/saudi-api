@@ -1,0 +1,190 @@
+slug: spl-national-address
+provider: saudi-post-spl
+name:
+  en: National Address API
+  ar: واجهة العنوان الوطني
+summary:
+  en: Search, verify and geocode Saudi national addresses, and look up regions, cities, districts and points of interest.
+  ar: البحث عن العناوين الوطنية السعودية والتحقق منها وترميزها جغرافياً، والاستعلام عن المناطق والمدن والأحياء ونقاط الاهتمام.
+description:
+  en: >-
+    Saudi Post | SPL's National Address APIs serve government agencies, businesses and developers.
+    The Address API searches addresses by free text or by building number, postal code and additional
+    number, verifies an address, reverse-geocodes a coordinate and finds nearby points of interest.
+    The Lookups API lists regions, cities, districts and point-of-interest categories. Every request
+    needs a subscription key from the developer portal, sent as the api_key header or query parameter;
+    responses are JSON or XML, in Arabic (language=A) or English (language=E).
+  ar: >-
+    تخدم واجهات العنوان الوطني من البريد السعودي | سبل الجهات الحكومية والمنشآت والمطورين. تبحث واجهة
+    العناوين عن العنوان بنص حر أو برقم المبنى والرمز البريدي والرقم الإضافي، وتتحقق من صحة العنوان،
+    وتحوّل الإحداثيات إلى عنوان، وتجد نقاط الاهتمام القريبة. وتسرد واجهة القوائم المناطق والمدن والأحياء
+    وفئات نقاط الاهتمام. يحتاج كل طلب إلى مفتاح اشتراك من بوابة المطورين يُرسل في الترويسة أو المعامل
+    api_key، وتأتي الاستجابات بصيغة JSON أو XML بالعربية (language=A) أو الإنجليزية (language=E).
+sectors: [geospatial, transport, government]
+tags: [national address, geocoding, postal code, poi, logistics]
+documentation_url: https://api.address.gov.sa/apidocumentation
+signup_url: https://api.address.gov.sa/signup
+base_urls:
+  - url: https://apina.address.gov.sa/NationalAddress/v3.1
+formats: [json, xml]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: unknown
+  api_key: { in: header, name: api_key }
+check:
+  url: https://api.address.gov.sa/
+endpoints:
+  - id: address-free-text
+    method: GET
+    path: /Address/address-free-text
+    summary:
+      en: Find addresses that match free text.
+      ar: البحث عن العناوين المطابقة لنص حر.
+    parameters:
+      - name: addressstring
+        in: query
+        required: true
+        description: { en: The address text to search for., ar: نص العنوان المطلوب البحث عنه. }
+        example: King Fahd Road Riyadh
+      - name: language
+        in: query
+        description: { en: "Response language: A (Arabic) or E (English).", ar: "لغة الاستجابة: A للعربية أو E للإنجليزية." }
+        example: E
+        allowed_values: [A, E]
+      - name: format
+        in: query
+        description: { en: Response format., ar: صيغة الاستجابة. }
+        example: json
+        allowed_values: [json, xml]
+      - name: page
+        in: query
+        type: integer
+        description: { en: Result page., ar: صفحة النتائج. }
+        example: "1"
+  - id: address-verify
+    method: GET
+    path: /Address/address-verify
+    summary:
+      en: Verify an address by building number, postal code and additional number.
+      ar: التحقق من عنوان برقم المبنى والرمز البريدي والرقم الإضافي.
+    parameters:
+      - name: buildingnumber
+        in: query
+        required: true
+        description: { en: The building number., ar: رقم المبنى. }
+        example: "8228"
+      - name: zipcode
+        in: query
+        required: true
+        description: { en: The postal code., ar: الرمز البريدي. }
+        example: "12643"
+      - name: additionalnumber
+        in: query
+        required: true
+        description: { en: The additional number., ar: الرقم الإضافي. }
+        example: "2121"
+      - name: language
+        in: query
+        description: { en: "Response language: A or E.", ar: "لغة الاستجابة: A أو E." }
+        example: E
+        allowed_values: [A, E]
+      - name: format
+        in: query
+        description: { en: Response format., ar: صيغة الاستجابة. }
+        example: json
+        allowed_values: [json, xml]
+  - id: address-geocode
+    method: GET
+    path: /Address/address-geocode
+    summary:
+      en: The parcel address at a coordinate (reverse geocoding).
+      ar: عنوان القطعة عند إحداثيات معينة (الترميز الجغرافي العكسي).
+    parameters:
+      - name: lat
+        in: query
+        required: true
+        type: number
+        description: { en: Latitude., ar: خط العرض. }
+        example: "24.7136"
+      - name: long
+        in: query
+        required: true
+        type: number
+        description: { en: Longitude., ar: خط الطول. }
+        example: "46.6753"
+      - name: language
+        in: query
+        description: { en: "Response language: A or E.", ar: "لغة الاستجابة: A أو E." }
+        example: E
+        allowed_values: [A, E]
+  - id: poi-nearest
+    method: GET
+    path: /Address/poi-nearest
+    summary:
+      en: Points of interest near a coordinate.
+      ar: نقاط الاهتمام القريبة من إحداثيات معينة.
+    parameters:
+      - name: lat
+        in: query
+        required: true
+        type: number
+        description: { en: Latitude., ar: خط العرض. }
+        example: "24.7136"
+      - name: long
+        in: query
+        required: true
+        type: number
+        description: { en: Longitude., ar: خط الطول. }
+        example: "46.6753"
+      - name: radius
+        in: query
+        type: number
+        description: { en: Search radius., ar: نصف قطر البحث. }
+        example: "0.5"
+  - id: list-regions
+    method: GET
+    path: /lookup/regions
+    summary:
+      en: The Kingdom's administrative regions.
+      ar: المناطق الإدارية في المملكة.
+    parameters:
+      - name: language
+        in: query
+        description: { en: "Response language: A or E.", ar: "لغة الاستجابة: A أو E." }
+        example: E
+        allowed_values: [A, E]
+      - name: format
+        in: query
+        description: { en: Response format., ar: صيغة الاستجابة. }
+        example: json
+        allowed_values: [json, xml]
+  - id: list-cities
+    method: GET
+    path: /lookup/cities
+    summary:
+      en: Cities, optionally of one region.
+      ar: المدن، ويمكن حصرها في منطقة واحدة.
+    parameters:
+      - name: language
+        in: query
+        required: true
+        description: { en: "Response language: A or E.", ar: "لغة الاستجابة: A أو E." }
+        example: E
+        allowed_values: [A, E]
+      - name: format
+        in: query
+        required: true
+        description: { en: Response format., ar: صيغة الاستجابة. }
+        example: json
+        allowed_values: [json, xml]
+      - name: regionid
+        in: query
+        description: { en: A region id from list-regions (-1 for all)., ar: معرّف منطقة من قائمة المناطق (-1 للكل). }
+        example: "-1"
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://api.address.gov.sa/apidocumentation
+    - https://api.address.gov.sa/developer/apis?api-version=2022-04-01-preview

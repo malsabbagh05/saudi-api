@@ -1,0 +1,51 @@
+slug: alrajhi-open-banking
+provider: al-rajhi-bank
+name:
+  en: Al Rajhi Bank Open Banking APIs
+  ar: واجهات المصرفية المفتوحة من مصرف الراجحي
+summary:
+  en: Account information and payment APIs under SAMA's Open Banking Framework, with a sandbox and free standard plans.
+  ar: واجهات معلومات الحسابات والمدفوعات وفق إطار المصرفية المفتوحة، مع بيئة اختبار وخطط أساسية مجانية.
+description:
+  en: >-
+    Al Rajhi Bank's developer portal offers open banking APIs to third parties: account access
+    consents, accounts, balances, beneficiaries, direct debits, parties, scheduled payments, standing
+    orders and transactions, and domestic payments, following the KSA Open Banking standard
+    (account-information 2022.11.01). Security uses OAuth with pushed authorization requests, CIBA
+    and the FAPI security profile. Sign up for sandbox access; moving to production needs the bank's
+    legal onboarding.
+  ar: >-
+    تتيح بوابة المطورين لدى مصرف الراجحي واجهات المصرفية المفتوحة للأطراف الثالثة: موافقات الوصول إلى
+    الحسابات، والحسابات، والأرصدة، والمستفيدين، والخصم المباشر، والأطراف، والمدفوعات المجدولة، والأوامر
+    الدائمة، والعمليات، والمدفوعات المحلية، وفق معيار المصرفية المفتوحة في المملكة (معلومات الحسابات
+    2022.11.01). يعتمد الأمان على OAuth مع طلبات التفويض المدفوعة وCIBA وملف الأمان FAPI. سجّل للحصول على
+    بيئة الاختبار؛ ويتطلب الانتقال إلى الإنتاج استكمال المتطلبات النظامية لدى المصرف.
+sectors: [finance, payments]
+tags: [open banking, ais, pis, fapi, accounts, transactions]
+documentation_url: https://developer.alrajhibank.com.sa/open-banking/APIGuides
+signup_url: https://developer.alrajhibank.com.sa/open-banking/
+base_urls:
+  - url: https://api.alrajhibank.com.sa/open-banking
+formats: [json]
+access:
+  level: approval
+  auth: [oauth2]
+  pricing: freemium
+  notes:
+    en: The Standard and Advanced plans are free; a Premium plan for premium data is announced with fees.
+    ar: الخطتان الأساسية والمتقدمة مجانيتان، وأُعلن عن خطة متميزة برسوم للبيانات المتقدمة.
+check:
+  url: https://developer.alrajhibank.com.sa/open-banking/
+endpoints:
+  - id: create-account-access-consent
+    method: POST
+    path: /account-information/2022.11.01-final-errata2/account-access-consents
+    summary:
+      en: Create the consent a customer grants for account information access.
+      ar: إنشاء موافقة العميل على الوصول إلى معلومات الحساب.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.alrajhibank.com.sa/open-banking/
+    - https://developer.alrajhibank.com.sa/open-banking/APIGuides

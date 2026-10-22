@@ -1,0 +1,70 @@
+slug: wathq-company-contracts
+provider: ministry-of-commerce
+name:
+  en: Company Contracts API (Wathq)
+  ar: واجهة عقود الشركات (واثق)
+summary:
+  en: A company's articles of association under the new legislation, with partners, management and their powers.
+  ar: عقد تأسيس الشركة وفق النظام الجديد، مع الشركاء والإدارة وصلاحياتهم.
+description:
+  en: >-
+    The Ministry of Commerce offers company contract data through Wathq: the full articles of
+    association of a company by its Commercial Registration National Number, its management, a
+    manager's permissions, and the lookups (article parts, partner decisions, exercise methods) the
+    contract fields refer to.
+  ar: >-
+    تتيح وزارة التجارة بيانات عقود الشركات عبر منصة واثق: عقد تأسيس الشركة كاملاً بالرقم الوطني الموحد
+    للسجل التجاري، وإدارتها، وصلاحيات المدير، والقوائم المرجعية (أجزاء المواد وقرارات الشركاء وطرق
+    الممارسة) التي تشير إليها حقول العقد.
+sectors: [commerce, government]
+tags: [wathq, articles of association, company contract, partners, kyb]
+documentation_url: https://developer.wathq.sa/en/api/35
+openapi_url: https://developer.wathq.sa/sites/default/files/2025-03/Company%20Contracts%20v2.8.0_0%20%281%29-all%20%281%29.yaml
+signup_url: https://developer.wathq.sa/en/apis
+terms_url: https://developer.wathq.sa/en/wathiq-terms/site
+base_urls:
+  - url: https://api.wathq.sa/company-contract
+formats: [json]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: paid
+  api_key: { in: header, name: apiKey }
+check:
+  url: https://developer.wathq.sa/en/api/35
+endpoints:
+  - id: contract-info
+    method: GET
+    path: /info/{crNationalNumber}
+    summary:
+      en: The company contract with its basic partner and manager information.
+      ar: عقد الشركة مع البيانات الأساسية للشركاء والمديرين.
+    parameters:
+      - name: crNationalNumber
+        in: path
+        required: true
+        description: { en: Commercial Registration National Number., ar: الرقم الوطني الموحد للسجل التجاري. }
+        example: "7000000000"
+      - name: language
+        in: query
+        description: { en: Language of the contract data., ar: لغة بيانات العقد. }
+        example: en
+        allowed_values: [ar, en]
+  - id: management
+    method: GET
+    path: /management/{crNationalNumber}
+    summary:
+      en: The company's management.
+      ar: إدارة الشركة.
+    parameters:
+      - name: crNationalNumber
+        in: path
+        required: true
+        description: { en: Commercial Registration National Number., ar: الرقم الوطني الموحد للسجل التجاري. }
+        example: "7000000000"
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.wathq.sa/en/api/35
+    - https://developer.wathq.sa/sites/default/files/2025-03/Company%20Contracts%20v2.8.0_0%20%281%29-all%20%281%29.yaml

@@ -1,0 +1,4 @@
+# Keep LF in every checkout and worktree, on every OS. Git for Windows sets
+# core.autocrlf=true, which would check out the Makefile, the shell and Python
+# scripts and tests/support/postgres.conf with CRLF and break bash, sed and shebangs.
+* text=auto eol=lf

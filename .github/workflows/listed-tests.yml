@@ -1,0 +1,106 @@
+name: Listed tests
+
+on:
+  pull_request:
+    branches:
+      - development
+      - staging
+      - main
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  selection:
+    if: github.event.action == 'edited'
+    name: Read edited test selection
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      unchanged: ${{ steps.selection.outputs.unchanged }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Compare the listed tests
+        id: selection
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PREVIOUS_PR_BODY: ${{ github.event.changes.body.from }}
+          PR_BODY_EDITED: ${{ github.event.changes.body != null }}
+        run: python3 scripts/ci/listed_tests.py selection
+
+  listed-tests:
+    needs: selection
+    # An unchanged edit must not replace a failed canonical check with a skip.
+    name: >-
+      ${{ github.event.action == 'edited'
+          && needs.selection.result == 'success'
+          && needs.selection.outputs.unchanged == 'true'
+          && 'Listed tests unchanged'
+          || 'Listed tests' }}
+    if: >-
+      ${{ always()
+          && (github.event.action != 'edited'
+              || needs.selection.result != 'success'
+              || needs.selection.outputs.unchanged != 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: listed-tests-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      - name: Require a valid edited selection
+        if: github.event.action == 'edited' && needs.selection.result != 'success'
+        run: |
+          echo '::error::The edited test selection could not be validated.'
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: .python-version
+
+      - name: Read the listed tests
+        id: list
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python3 scripts/ci/listed_tests.py targets
+
+      - name: Install uv
+        if: steps.list.outputs.count != '0'
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+
+      - name: Validate exact listed collection
+        if: steps.list.outputs.count != '0'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: uv run --frozen python scripts/ci/listed_tests.py collect
+
+      # make test-focused starts the test PostgreSQL container with the settings in
+      # tests/support/postgres.conf, as it does locally.
+      - name: Run the listed tests
+        if: steps.list.outputs.count != '0'
+        env:
+          TARGETS: ${{ steps.list.outputs.targets }}
+          WORKERS: ${{ steps.list.outputs.workers }}
+        run: >-
+          make test-focused
+          TEST="$TARGETS"
+          PYTEST_ARGS="-n $WORKERS --timeout=60 --durations=10 -ra -p no:cacheprovider
+          --junitxml=$RUNNER_TEMP/listed-tests.xml"
+
+      - name: Require exactly the listed tests to run
+        if: steps.list.outputs.count != '0'
+        env:
+          TARGETS: ${{ steps.list.outputs.targets }}
+        # The IDs passed validation; word splitting separates them.
+        run: python3 scripts/ci/listed_tests.py require-run "$RUNNER_TEMP/listed-tests.xml" $TARGETS

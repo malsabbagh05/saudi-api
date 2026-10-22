@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-22T11:45:00Z",
+  "title": "Design System: Saudi API Catalogue",
+  "extensions": {
+    "colorMeta": {
+      "rawashin-turquoise": { "role": "primary", "displayName": "Rawashin Turquoise", "canonical": "oklch(0.5 0.085 192)", "tonalRamp": ["oklch(0.9 0.03 192)", "oklch(0.74 0.1 190)", "oklch(0.5 0.085 192)", "oklch(0.42 0.07 190)", "oklch(0.32 0.04 190)"] },
+      "coral-stone": { "role": "neutral", "displayName": "Coral Stone", "canonical": "oklch(0.936 0.006 75)", "tonalRamp": ["oklch(0.975 0.004 75)", "oklch(0.962 0.005 75)", "oklch(0.936 0.006 75)", "oklch(0.905 0.01 70)", "oklch(0.84 0.016 65)"] },
+      "teak-ink": { "role": "neutral", "displayName": "Teak Ink", "canonical": "oklch(0.255 0.032 52)", "tonalRamp": ["oklch(0.8 0.02 62)", "oklch(0.45 0.03 55)", "oklch(0.34 0.045 50)", "oklch(0.255 0.032 52)", "oklch(0.205 0.018 52)"] },
+      "reach-green": { "role": "state", "displayName": "Reach Green", "canonical": "oklch(0.47 0.09 150)" },
+      "degraded-amber": { "role": "state", "displayName": "Degraded Amber", "canonical": "oklch(0.55 0.12 70)" },
+      "blocked-brick": { "role": "state", "displayName": "Blocked Brick", "canonical": "oklch(0.5 0.15 32)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The home page statement only." },
+      "headline": { "displayName": "Headline", "purpose": "Page titles: API, dataset, provider." },
+      "title": { "displayName": "Title", "purpose": "Section headings." },
+      "body": { "displayName": "Body", "purpose": "Prose and row summaries; line height 1.8 in Arabic." },
+      "label": { "displayName": "Label", "purpose": "Fact labels, counts and row metadata." },
+      "code": { "displayName": "Code", "purpose": "Code, URLs, parameters and identifiers; always left-to-right." }
+    },
+    "shadows": [
+      { "name": "lattice-lit", "value": "drop-shadow(0 0 4px var(--lattice-open))", "purpose": "The glow of lattices whose level the access filter selects; the only glow in the system." }
+    ],
+    "motion": [
+      { "name": "state", "value": "200ms ease-out", "purpose": "Colour and glow changes on hover, focus and filter state; reduced motion collapses it." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Access Lattice",
+      "kind": "custom",
+      "refersTo": "access-lattice",
+      "description": "Five carved apertures; as many lit as the API is open. Mirrors in RTL.",
+      "html": "<svg class=\"ds-lattice\" viewBox=\"0 0 56 14\" role=\"img\" aria-label=\"Access: Registration, 2 of 5, from open to restricted\"><rect x=\"0.5\" y=\"0.5\" width=\"55\" height=\"13\" rx=\"1\" class=\"frame\"/><rect x=\"3\" y=\"4\" width=\"6\" height=\"6\" transform=\"rotate(45 6 7)\" class=\"open\"/><rect x=\"14\" y=\"4\" width=\"6\" height=\"6\" transform=\"rotate(45 17 7)\" class=\"open\"/><rect x=\"25\" y=\"4\" width=\"6\" height=\"6\" transform=\"rotate(45 28 7)\" class=\"open\"/><rect x=\"36\" y=\"4\" width=\"6\" height=\"6\" transform=\"rotate(45 39 7)\" class=\"open\"/><rect x=\"47\" y=\"4\" width=\"6\" height=\"6\" transform=\"rotate(45 50 7)\" class=\"shut\"/></svg>",
+      "css": ".ds-lattice { width: 56px; height: 14px; } .ds-lattice .frame { fill: none; stroke: oklch(0.34 0.045 50 / 0.4); } .ds-lattice .open { fill: oklch(0.5 0.085 192); } .ds-lattice .shut { fill: oklch(0.84 0.016 65); } [dir=rtl] .ds-lattice { transform: scaleX(-1); }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Apply, search and submit actions.",
+      "html": "<button class=\"ds-btn\">Apply</button>",
+      "css": ".ds-btn { height: 2rem; padding: 0 1rem; border: 0; border-radius: 0.075rem; background: oklch(0.5 0.085 192); color: oklch(0.962 0.005 75); font: 500 0.875rem 'Readex Pro', sans-serif; } .ds-btn:hover { background: oklch(0.5 0.085 192 / 0.9); } .ds-btn:focus-visible { outline: 2px solid oklch(0.5 0.085 192); outline-offset: 2px; }"
+    },
+    {
+      "name": "API Row",
+      "kind": "custom",
+      "refersTo": "api-row",
+      "description": "A ruled row: description on the start side, a compact definition list of access, auth, endpoints and reachability on the end side.",
+      "html": "<li class=\"ds-row\"><div><h3>National Address API</h3><p class=\"muted\">Saudi Post | SPL</p></div><dl><dt>Access</dt><dd>Registration</dd><dt>Authentication</dt><dd>API key</dd></dl></li>",
+      "css": ".ds-row { display: grid; grid-template-columns: minmax(0,1fr) 15rem; gap: 0.5rem 1.5rem; padding: 1rem; border-bottom: 1px solid oklch(0.8 0.02 62); list-style: none; } .ds-row h3 { margin: 0; font: 500 1rem 'Readex Pro', sans-serif; } .ds-row .muted, .ds-row dt { color: oklch(0.45 0.03 55); font-size: 0.75rem; } .ds-row dl { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.75rem; margin: 0; font-size: 0.75rem; }"
+    },
+    {
+      "name": "Code Block",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "Teak ground, mono code, copy toolbar; always left-to-right.",
+      "html": "<div class=\"ds-code\" dir=\"ltr\"><div class=\"bar\">Copy</div><pre>curl \"https://api.datasaudi.sa/tesseract/cubes\"</pre></div>",
+      "css": ".ds-code { background: oklch(0.255 0.032 52); color: oklch(0.93 0.01 80); border-radius: 0.075rem; } .ds-code .bar { text-align: end; padding: 0.25rem 0.5rem; border-bottom: 1px solid rgb(255 255 255 / 0.1); font-size: 0.75rem; } .ds-code pre { margin: 0; padding: 0.75rem 1rem; font: 0.8rem/1.625 'JetBrains Mono', monospace; overflow-x: auto; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Al-Balad rawashin",
+    "overview": "The directory reads like the carved wooden window screens of Jeddah's old town: dense, ordered panels of fine teak rules on coral stone, where light comes through only where the screen is open. Here the light is access: every API carries a carved lattice lit as far as it is open. The rest stays quiet and standard: an Operate surface where developers find things before they notice the world, in Arabic and English alike.",
+    "keyCharacteristics": [
+      "Coral-stone ground and teak ink; one accent, the rawashin turquoise.",
+      "Ruled rows and panels with hairline teak borders and near-square corners.",
+      "The access lattice on every API, lit by the access filter.",
+      "One family (Readex Pro) for Arabic and Latin; JetBrains Mono only for code."
+    ],
+    "rules": [
+      { "name": "The Light Is Access Rule", "body": "Turquoise marks openness and action, never decoration.", "section": "colors" },
+      { "name": "The Stone Not Cream Rule", "body": "The ground stays grey stone at chroma 0.006.", "section": "colors" },
+      { "name": "The Code Is LTR Rule", "body": "Code, URLs and identifiers stay left-to-right inside Arabic pages.", "section": "typography" },
+      { "name": "The Flat Facade Rule", "body": "No decorative shadows; tone and hairline rules separate surfaces.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do show access with the lattice and its word together.",
+      "Do keep lists as ruled rows with facts readable in the row.",
+      "Do write every UI string in both message files.",
+      "Do use logical spacing and position utilities so pages mirror."
+    ],
+    "donts": [
+      "Don't put a kicker or eyebrow label above a heading.",
+      "Don't lay out APIs as a grid of same-size cards.",
+      "Don't warm the ground into cream or add wood or stone textures.",
+      "Don't use monospace for anything that is not code, a URL or an identifier."
+    ]
+  }
+}

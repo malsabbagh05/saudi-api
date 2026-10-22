@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+# Environment files hold credentials and machine values; only the example is tracked.
+.env
+.env.*
+!.env.example
+# Web app
+node_modules/
+.next/
+out/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+# Agent skills, workflows and Claude Code settings stay local to the main checkout.
+.agents/
+.claude/
+skills-lock.json
+# Impeccable's local review captures, mocks and per-machine settings.
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/build/
+.impeccable/config.local.json

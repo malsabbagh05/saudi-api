@@ -1,0 +1,54 @@
+slug: tamara-payments
+provider: tamara
+name:
+  en: Tamara API
+  ar: واجهة تمارا
+summary:
+  en: Offer Tamara's buy-now-pay-later at checkout and manage the resulting orders, captures and refunds.
+  ar: إتاحة خدمة اشترِ الآن وادفع لاحقاً من تمارا عند الدفع، وإدارة الطلبات والقبض والاسترداد.
+description:
+  en: >-
+    Tamara's API creates checkout sessions, authorises approved orders, captures and refunds them, and
+    returns order details. Merchants authenticate with an API token sent as a Bearer token in the
+    Authorization header. Tamara provides a sandbox base URL for integration and a production base URL.
+  ar: >-
+    تنشئ واجهة تمارا جلسات الدفع، وتعتمد الطلبات الموافق عليها، وتقبض مبالغها وتستردها، وتعيد بيانات
+    الطلبات. يوثّق التجار طلباتهم برمز واجهة يُرسل بصيغة Bearer في ترويسة Authorization. توفر تمارا عنواناً
+    لبيئة الاختبار وآخر لبيئة الإنتاج.
+sectors: [payments, finance, e-commerce]
+tags: [bnpl, buy now pay later, checkout, installments]
+documentation_url: https://docs.tamara.co/reference/tamara-api-reference-documentation
+base_urls:
+  - url: https://api.tamara.co
+    environment: production
+  - url: https://api-sandbox.tamara.co
+    environment: sandbox
+formats: [json]
+access:
+  level: approval
+  auth: [bearer]
+  pricing: unknown
+  notes:
+    en: The API token is issued to onboarded merchants and sent as "Authorization Bearer <token>".
+    ar: يُصدر رمز الواجهة للتجار المسجلين ويُرسل بصيغة "Authorization Bearer <token>".
+check:
+  url: https://docs.tamara.co/reference/tamara-api-reference-documentation
+endpoints:
+  - id: get-order
+    method: GET
+    path: /orders/{order_id}
+    summary:
+      en: The details of an order, by Tamara's order id.
+      ar: بيانات طلب بمعرّف الطلب لدى تمارا.
+    parameters:
+      - name: order_id
+        in: path
+        required: true
+        description: { en: Tamara's order id., ar: معرّف الطلب لدى تمارا. }
+        example: 00000000-0000-4000-8000-000000000000
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://docs.tamara.co/reference/tamara-api-reference-documentation
+    - https://docs.tamara.co/reference/getorderdetails.md

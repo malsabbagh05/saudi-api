@@ -1,0 +1,39 @@
+slug: sama-open-banking
+provider: saudi-central-bank
+name:
+  en: SAMA Open Banking Framework and Lab
+  ar: إطار المصرفية المفتوحة ومعملها لدى البنك المركزي السعودي
+summary:
+  en: The national open banking standard (account information and payment initiation) and its testing lab for banks and fintechs.
+  ar: المعيار الوطني للمصرفية المفتوحة (معلومات الحسابات وبدء المدفوعات) ومعمل اختباره للبنوك وشركات التقنية المالية.
+description:
+  en: >-
+    SAMA's Open Banking Framework sets the use cases, business rules and technical standards
+    (customer experience guidelines, API specifications, implementation requirements and operational
+    guidelines) that Saudi banks implement for account information and payment initiation. The Open
+    Banking Lab simulates a bank's open banking APIs and runs conformance suites to test and certify
+    implementations. Access to the framework documents and the lab is granted by SAMA's Open Banking
+    team; the published specification space is locked to participants. Use a bank's own developer
+    portal, such as Al Rajhi Bank's, to build against live APIs.
+  ar: >-
+    يحدد إطار المصرفية المفتوحة لدى البنك المركزي السعودي حالات الاستخدام وقواعد العمل والمعايير
+    التقنية (إرشادات تجربة العميل ومواصفات الواجهات البرمجية ومتطلبات التنفيذ والإرشادات التشغيلية)
+    التي تطبقها البنوك السعودية لخدمات معلومات الحسابات وبدء المدفوعات. ويحاكي معمل المصرفية المفتوحة
+    واجهات البنوك ويوفر حزم اختبار المطابقة لاختبار التطبيقات واعتمادها. يمنح فريق المصرفية المفتوحة في
+    البنك المركزي حق الوصول إلى وثائق الإطار والمعمل، ومساحة المواصفات المنشورة مقصورة على المشاركين.
+    استخدم بوابة المطورين لدى البنك نفسه، مثل بوابة مصرف الراجحي، للبناء على الواجهات الفعلية.
+sectors: [finance, payments]
+tags: [open banking, ais, pis, conformance, sandbox, fintech]
+documentation_url: https://openbanking.sama.gov.sa/index-en.html
+access:
+  level: restricted
+  auth: [undisclosed]
+  pricing: unknown
+  notes:
+    en: For banks and licensed fintechs; request access from SAMA's Open Banking team through the portal.
+    ar: للبنوك وشركات التقنية المالية المرخصة؛ يُطلب الوصول من فريق المصرفية المفتوحة عبر البوابة.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://openbanking.sama.gov.sa/index-en.html

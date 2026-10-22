@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Require staging to contain its base and match a development commit's tree.
+
+Exit codes: 0 allowed or no promotion rule; 2 bad arguments;
+3 promotion precondition mismatch; 9 a gh call failed.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from typing import cast
+
+PROMOTION_SOURCES = {"staging": "development"}
+# This is a search bound, not a tuned value.
+SOURCE_COMMIT_SEARCH_BOUND = 500
+
+
+def gh_json(endpoint: str) -> dict[str, object] | list[dict[str, object]]:
+    result = subprocess.run(
+        ["gh", "api", endpoint],
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode:
+        print(result.stderr, end="", file=sys.stderr)
+        sys.exit(9)
+    return cast(dict[str, object] | list[dict[str, object]], json.loads(result.stdout))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--repo", required=True)
+    parser.add_argument("--base", required=True)
+    parser.add_argument("--head", required=True)
+    args = parser.parse_args()
+    source = PROMOTION_SOURCES.get(args.base)
+    if source is None:
+        print(f"no promotion rule for {args.base}")
+        return 0
+
+    comparison = gh_json(f"repos/{args.repo}/compare/{args.base}...{args.head}")
+    assert isinstance(comparison, dict)
+    if comparison["behind_by"] != 0:
+        print(
+            f"The head must contain the current {args.base}; merge origin/{args.base} with -s ours."
+        )
+        return 3
+
+    head = gh_json(f"repos/{args.repo}/git/commits/{args.head}")
+    assert isinstance(head, dict)
+    tree = cast(dict[str, str], head["tree"])["sha"]
+    for page in range(1, SOURCE_COMMIT_SEARCH_BOUND // 100 + 1):
+        commits = gh_json(f"repos/{args.repo}/commits?sha={source}&per_page=100&page={page}")
+        assert isinstance(commits, list)
+        for commit in commits:
+            if cast(dict[str, dict[str, str]], commit["commit"])["tree"]["sha"] == tree:
+                print(f"tree {tree} equals {source} commit {commit['sha']}")
+                return 0
+    print(
+        f"The head's tree equals no commit among the newest {SOURCE_COMMIT_SEARCH_BOUND} "
+        f"of {source}. Changes reach {args.base} only by aligning it to a {source} commit."
+    )
+    return 3
+
+
+if __name__ == "__main__":
+    sys.exit(main())

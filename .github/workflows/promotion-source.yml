@@ -1,0 +1,28 @@
+name: Promotion source
+
+on:
+  pull_request:
+    branches: [staging]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  promotion-source:
+    name: Promotion source
+    # GitHub-hosted: the script calls `gh`, which our own runners do not carry.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check promotion source
+        run: scripts/ci/promotion-source --repo "${{ github.repository }}" --base "${{ github.base_ref }}" --head "${{ github.event.pull_request.head.sha }}"
+        env:
+          GH_TOKEN: ${{ github.token }}

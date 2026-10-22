@@ -1,0 +1,69 @@
+slug: moyasar-payments
+provider: moyasar
+name:
+  en: Moyasar Payments API
+  ar: واجهة ميسر للمدفوعات
+summary:
+  en: Accept mada, Visa, Mastercard, Apple Pay, STC Pay and other payments, with invoices, payouts and a test mode.
+  ar: قبول المدفوعات عبر مدى وفيزا وماستركارد وApple Pay وSTC Pay وغيرها، مع الفواتير والتحويلات ووضع اختبار.
+description:
+  en: >-
+    Moyasar's REST API creates, fetches, lists, captures, voids and refunds payments, and offers
+    invoices, payouts, settlements and tokenized cards. Requests authenticate with HTTP Basic: the
+    API key is the username and the password is empty. Publishable keys (pk_) may only create
+    payments from browsers and apps; secret keys (sk_) stay on the merchant's server. Test keys
+    (pk_test_, sk_test_) run against a sandbox that simulates the payment networks.
+  ar: >-
+    تنشئ واجهة ميسر المدفوعات وتجلبها وتسردها وتقبضها وتلغيها وتستردها، وتتيح الفواتير والتحويلات
+    والتسويات والبطاقات المرمّزة. تُوثَّق الطلبات بالمصادقة الأساسية (Basic): مفتاح الواجهة اسماً للمستخدم
+    وكلمة مرور فارغة. لا تصلح المفاتيح القابلة للنشر (pk_) إلا لإنشاء المدفوعات من المتصفح والتطبيقات،
+    وتبقى المفاتيح السرية (sk_) على خادم التاجر. تعمل مفاتيح الاختبار (pk_test_ وsk_test_) على بيئة
+    اختبار تحاكي شبكات الدفع.
+sectors: [payments, finance]
+tags: [payment gateway, mada, apple pay, stc pay, cards, refunds]
+documentation_url: https://docs.moyasar.com/api/api-introduction
+signup_url: https://docs.moyasar.com/
+base_urls:
+  - url: https://api.moyasar.com/v1
+formats: [json]
+access:
+  level: registration
+  auth: [basic]
+  pricing: unknown
+  notes:
+    en: "Basic credentials are the API key as username and an empty password, for example curl -u \"$API_KEY:\"."
+    ar: "بيانات المصادقة الأساسية هي مفتاح الواجهة اسماً للمستخدم وكلمة مرور فارغة، مثل curl -u \"$API_KEY:\"."
+check:
+  url: https://docs.moyasar.com/api/api-introduction
+endpoints:
+  - id: list-payments
+    method: GET
+    path: /payments
+    summary:
+      en: List the account's payments.
+      ar: سرد مدفوعات الحساب.
+  - id: fetch-payment
+    method: GET
+    path: /payments/{id}
+    summary:
+      en: Fetch one payment.
+      ar: جلب عملية دفع واحدة.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: { en: The payment id., ar: معرّف عملية الدفع. }
+        example: 00000000-0000-4000-8000-000000000000
+  - id: create-payment
+    method: POST
+    path: /payments
+    summary:
+      en: Start a card, Apple Pay, Samsung Pay or STC Pay payment.
+      ar: بدء عملية دفع بالبطاقة أو Apple Pay أو Samsung Pay أو STC Pay.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://docs.moyasar.com/api/api-introduction
+    - https://docs.moyasar.com/api/authentication
+    - https://docs.moyasar.com/api/payments/01-create-payment

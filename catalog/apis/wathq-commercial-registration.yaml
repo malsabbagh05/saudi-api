@@ -1,0 +1,101 @@
+slug: wathq-commercial-registration
+provider: ministry-of-commerce
+name:
+  en: Commercial Registration API (Wathq)
+  ar: واجهة السجل التجاري (واثق)
+summary:
+  en: A business's commercial registration under the new legislation, from trade name and status to capital, owners, managers and branches.
+  ar: بيانات السجل التجاري للمنشأة وفق النظام الجديد، من الاسم التجاري والحالة إلى رأس المال والملاك والمديرين والفروع.
+description:
+  en: >-
+    The Ministry of Commerce offers commercial register data through Wathq. Look a business up by its
+    Commercial Registration National Number for its full record, basic
+    information, status, capital, owners and partners, managers and board, branches, and related
+    registrations, in Arabic or English. Wathq publishes the OpenAPI (Swagger 2.0) description that
+    the catalogue keeps current, and a separate sandbox with test data.
+  ar: >-
+    تتيح وزارة التجارة بيانات السجل التجاري عبر منصة واثق. استعلم عن المنشأة بالرقم الوطني الموحد للسجل
+    التجاري لتحصل على بياناتها كاملة أو الأساسية، وحالة السجل، ورأس المال، والملاك والشركاء،
+    والمديرين وأعضاء مجلس الإدارة، والفروع، والسجلات المرتبطة، بالعربية أو الإنجليزية. تنشر واثق وصف
+    OpenAPI (الإصدار Swagger 2.0) الذي يُبقيه الدليل محدَّثاً، وبيئة اختبار مستقلة ببيانات تجريبية.
+sectors: [commerce, government]
+tags: [wathq, commercial register, cr, company, kyb, thiqah]
+documentation_url: https://developer.wathq.sa/en/api/32
+openapi_url: https://developer.wathq.sa/sites/default/files/2026-01/Wathq%20Commercial%20Registration%20API%20v6.15.0_0.yaml
+signup_url: https://developer.wathq.sa/en/apis
+terms_url: https://developer.wathq.sa/en/wathiq-terms/site
+base_urls:
+  - url: https://api.wathq.sa/commercial-registration
+    environment: production
+  - url: https://api.wathq.sa/sandbox/commercial-registration
+    environment: sandbox
+formats: [json]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: paid
+  api_key: { in: header, name: apiKey }
+  notes:
+    en: Create a Wathq account and an app to get its key; a one-time 30-day trial covers 100 inquiries, then a paid package.
+    ar: أنشئ حساباً وتطبيقاً في واثق للحصول على المفتاح؛ تغطي الباقة التجريبية لمرة واحدة 100 استعلام خلال 30 يوماً، ثم باقة مدفوعة.
+check:
+  url: https://developer.wathq.sa/en/api/32
+endpoints:
+  - id: full-info
+    method: GET
+    path: /fullinfo/{id}
+    summary:
+      en: The full commercial registration record.
+      ar: بيانات السجل التجاري كاملة.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: { en: Commercial Registration National Number., ar: الرقم الوطني الموحد للسجل التجاري. }
+        example: "7000000000"
+      - name: language
+        in: query
+        description: { en: Language of the record., ar: لغة البيانات. }
+        example: en
+        allowed_values: [ar, en]
+  - id: basic-info
+    method: GET
+    path: /info/{id}
+    summary:
+      en: The basic commercial registration data.
+      ar: البيانات الأساسية للسجل التجاري.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: { en: Commercial Registration National Number., ar: الرقم الوطني الموحد للسجل التجاري. }
+        example: "7000000000"
+      - name: language
+        in: query
+        description: { en: Language of the record., ar: لغة البيانات. }
+        example: en
+        allowed_values: [ar, en]
+  - id: status
+    method: GET
+    path: /status/{id}
+    summary:
+      en: The status of a commercial registration.
+      ar: حالة السجل التجاري.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: { en: Commercial Registration National Number., ar: الرقم الوطني الموحد للسجل التجاري. }
+        example: "7000000000"
+      - name: includeDates
+        in: query
+        type: boolean
+        description: { en: Include the status dates., ar: تضمين تواريخ الحالة. }
+        example: "true"
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.wathq.sa/en/api/32
+    - https://developer.wathq.sa/sites/default/files/2026-01/Wathq%20Commercial%20Registration%20API%20v6.15.0_0.yaml
+    - https://developer.wathq.sa/en/faq

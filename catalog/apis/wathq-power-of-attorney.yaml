@@ -1,0 +1,66 @@
+slug: wathq-power-of-attorney
+provider: ministry-of-justice
+name:
+  en: Power of Attorney API (Wathq)
+  ar: واجهة الوكالات (واثق)
+summary:
+  en: Verify a power of attorney and read its details and the texts it grants.
+  ar: التحقق من الوكالة الشرعية وقراءة بياناتها ونصوصها.
+description:
+  en: >-
+    The Ministry of Justice offers power of attorney data through Wathq. Verify an attorney by its
+    number, optionally with the identifier of one principal or one agent, and look up the standard
+    attorney texts that its details refer to.
+  ar: >-
+    تتيح وزارة العدل بيانات الوكالات الشرعية عبر منصة واثق. تحقق من الوكالة برقمها، ويمكن إضافة رقم هوية
+    أحد الموكلين أو أحد الوكلاء، واستعلم عن نصوص الوكالات المعتمدة التي تشير إليها بياناتها.
+sectors: [justice, government]
+tags: [wathq, power of attorney, wakala, verification]
+documentation_url: https://developer.wathq.sa/en/api/14
+openapi_url: https://developer.wathq.sa/sites/default/files/2023-11/swagger%20%283%29.yaml
+signup_url: https://developer.wathq.sa/en/apis
+terms_url: https://developer.wathq.sa/en/wathiq-terms/site
+base_urls:
+  - url: https://api.wathq.sa/v1/attorney
+formats: [json]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: paid
+  api_key: { in: header, name: apiKey }
+  notes:
+    en: Responses contain personal data; process them only on a lawful basis under the Personal Data Protection Law.
+    ar: تحتوي الاستجابات على بيانات شخصية؛ لا تعالجها إلا على أساس نظامي وفق نظام حماية البيانات الشخصية.
+check:
+  url: https://developer.wathq.sa/en/api/14
+endpoints:
+  - id: attorney-info
+    method: GET
+    path: /info/{code}
+    summary:
+      en: Verify a power of attorney and return its details.
+      ar: التحقق من الوكالة وإعادة بياناتها.
+    parameters:
+      - name: code
+        in: path
+        required: true
+        description: { en: The power of attorney number., ar: رقم الوكالة. }
+        example: "4500000000"
+      - name: principalId
+        in: query
+        description: { en: The identifier of one of the principals., ar: رقم هوية أحد الموكلين. }
+      - name: agentId
+        in: query
+        description: { en: The identifier of one of the agents., ar: رقم هوية أحد الوكلاء. }
+  - id: attorney-texts
+    method: GET
+    path: /lookup
+    summary:
+      en: The standard attorney texts and their identifiers.
+      ar: نصوص الوكالات المعتمدة ومعرّفاتها.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.wathq.sa/en/api/14
+    - https://developer.wathq.sa/sites/default/files/2023-11/swagger%20%283%29.yaml

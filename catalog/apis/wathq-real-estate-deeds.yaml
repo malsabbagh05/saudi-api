@@ -1,0 +1,76 @@
+slug: wathq-real-estate-deeds
+provider: ministry-of-justice
+name:
+  en: Real Estate Deeds API (Wathq)
+  ar: واجهة الصكوك العقارية (واثق)
+summary:
+  en: Verify a real estate deed and read its details, by deed number and one owner's identifier.
+  ar: التحقق من الصك العقاري وقراءة بياناته برقم الصك وهوية أحد الملاك.
+description:
+  en: >-
+    The Ministry of Justice offers real estate deed data through Wathq. A request names the deed
+    number, the identifier of one of its owners and that identifier's type (national ID, resident ID,
+    passport, commercial registration, endowment deed, licence, foreign commercial registration or
+    government entity), and returns the deed's details.
+  ar: >-
+    تتيح وزارة العدل بيانات الصكوك العقارية عبر منصة واثق. يحدد الطلب رقم الصك ورقم هوية أحد الملاك
+    ونوع الهوية (هوية وطنية أو إقامة أو جواز سفر أو سجل تجاري أو صك وقف أو ترخيص أو سجل تجاري أجنبي أو
+    جهة حكومية)، ويعيد بيانات الصك.
+sectors: [real-estate, justice]
+tags: [wathq, deed, property, real estate, verification]
+documentation_url: https://developer.wathq.sa/en/api/13
+openapi_url: https://developer.wathq.sa/sites/default/files/2023-11/real%20estate%20%281%29.yaml
+signup_url: https://developer.wathq.sa/en/apis
+terms_url: https://developer.wathq.sa/en/wathiq-terms/site
+base_urls:
+  - url: https://api.wathq.sa/moj/real-estate
+formats: [json]
+access:
+  level: registration
+  auth: [api_key]
+  pricing: paid
+  api_key: { in: header, name: apiKey }
+  notes:
+    en: Responses contain personal data; process them only on a lawful basis under the Personal Data Protection Law.
+    ar: تحتوي الاستجابات على بيانات شخصية؛ لا تعالجها إلا على أساس نظامي وفق نظام حماية البيانات الشخصية.
+check:
+  url: https://developer.wathq.sa/en/api/13
+endpoints:
+  - id: deed-details
+    method: GET
+    path: /deed/{deedNumber}/{idNumber}/{idType}
+    summary:
+      en: A real estate deed's details.
+      ar: بيانات الصك العقاري.
+    parameters:
+      - name: deedNumber
+        in: path
+        required: true
+        type: integer
+        description: { en: The deed number., ar: رقم الصك. }
+        example: "123456789012"
+      - name: idNumber
+        in: path
+        required: true
+        description: { en: The identifier of one of the owners., ar: رقم هوية أحد الملاك. }
+        example: "1000000000"
+      - name: idType
+        in: path
+        required: true
+        description: { en: The type of that identifier., ar: نوع الهوية. }
+        example: National_ID
+        allowed_values:
+          - National_ID
+          - Resident_ID
+          - Passport
+          - CR_NO
+          - Endowment_Deed_No
+          - license_No
+          - Foreign_CR_No
+          - Gov_National_ID
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developer.wathq.sa/en/api/13
+    - https://developer.wathq.sa/sites/default/files/2023-11/real%20estate%20%281%29.yaml

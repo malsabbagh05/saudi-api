@@ -1,0 +1,8 @@
+# Findings of the daily scan (.github/workflows/dependency-scan.yml) that have no
+# usable fix yet. Trivy reads this file from the repository root. Give each entry
+# the reason it is safe to keep, the date it was checked, and the condition for
+# removing it, above the identifier:
+#
+# <package>: <why the finding cannot be reached here>. Checked <date>. Remove when
+# <package> releases a fix that <consumer> accepts.
+# CVE-0000-00000

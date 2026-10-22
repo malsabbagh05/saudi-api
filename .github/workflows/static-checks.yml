@@ -1,0 +1,110 @@
+name: Static checks
+
+on:
+  pull_request:
+    branches:
+      - development
+      - staging
+      - main
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-static:
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+    name: Python static checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Before any install, so the scan reads only tracked files.
+      - name: Check files for secrets
+        run: |
+          scripts/ci/install-trivy.sh
+          "$RUNNER_TEMP/trivy" fs --scanners secret --exit-code 1 --quiet .
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: .python-version
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      # A pull request's own graph must have at most one head. A migration merged
+      # after this check passed is caught by merge-on-green --alembic.
+      - name: Check migration head
+        run: |
+          if [[ -f alembic.ini ]]; then
+            heads=$(uv run --no-sync alembic heads)
+            echo "${heads:-no migrations}"
+            test "$(grep -c '(head)' <<<"$heads" || true)" -le 1
+          fi
+
+      - name: Check Python lint
+        run: uv run --no-sync ruff check src tests scripts migrations
+
+      - name: Check Python formatting
+        run: uv run --no-sync ruff format --check src tests scripts migrations
+
+      - name: Check Python types
+        run: uv run --no-sync ty check
+
+      # Imports every test module and runs no test, so a test that imports a removed
+      # name fails here instead of when a pull request first lists it.
+      - name: Check test collection
+        run: uv run --no-sync pytest --collect-only -qq tests
+
+      - name: Check async route handlers
+        run: uv run --no-sync python scripts/ci/check_async_routes.py src
+
+      # Every catalogue file against the schema, its references and the invocation rules.
+      - name: Check catalogue
+        run: uv run --no-sync saudi-api catalog check
+
+  # The web directory in web/ (ADR-001). `npm run lint` runs ESLint and the check that
+  # web/messages/en.json and ar.json have the same keys; `next build` type-checks.
+  web-static:
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+    name: Web static checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: web/.nvmrc
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # The production build also type-checks the whole project.
+      - name: Build
+        run: npm run build

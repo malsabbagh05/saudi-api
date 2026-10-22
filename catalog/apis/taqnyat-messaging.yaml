@@ -1,0 +1,59 @@
+slug: taqnyat-messaging
+provider: taqnyat
+name:
+  en: Taqnyat messaging API
+  ar: واجهة تقنيات للرسائل
+summary:
+  en: Send SMS from registered sender names, check the account balance and the service status.
+  ar: إرسال الرسائل النصية بأسماء مرسلين مسجلة، والاستعلام عن رصيد الحساب وحالة الخدمة.
+description:
+  en: >-
+    Taqnyat's REST API sends SMS to one or many recipients, deletes scheduled messages and reports the
+    account balance and sender names; the same platform offers WhatsApp, voice, verification and email
+    APIs. Requests authenticate with the account's bearer token. A public status endpoint reports
+    whether the services are operational.
+  ar: >-
+    ترسل واجهة تقنيات الرسائل النصية إلى مستلم واحد أو أكثر، وتحذف الرسائل المجدولة، وتعرض رصيد الحساب
+    وأسماء المرسلين، وتتيح المنصة نفسها واجهات لواتساب والرسائل الصوتية والتحقق والبريد. تُوثَّق الطلبات
+    برمز Bearer الخاص بالحساب. وتوفر نقطة حالة عامة ما إذا كانت الخدمات تعمل.
+sectors: [telecom]
+tags: [sms, otp, messaging, whatsapp, notifications]
+documentation_url: https://dev.taqnyat.sa/en/doc/sms/
+base_urls:
+  - url: https://api.taqnyat.sa
+formats: [json]
+access:
+  level: registration
+  auth: [bearer]
+  pricing: paid
+  notes:
+    en: The bearer token comes from the Taqnyat account; messages are charged against the account's balance.
+    ar: يصدر رمز Bearer من حساب تقنيات، وتُحتسب الرسائل من رصيد الحساب.
+check:
+  url: https://api.taqnyat.sa/system/status
+endpoints:
+  - id: send-message
+    method: POST
+    path: /v1/messages
+    summary:
+      en: Send a message to one or more recipients.
+      ar: إرسال رسالة إلى مستلم أو أكثر.
+  - id: account-balance
+    method: GET
+    path: /account/balance
+    summary:
+      en: The account's remaining balance.
+      ar: الرصيد المتبقي في الحساب.
+  - id: system-status
+    method: GET
+    path: /system/status
+    summary:
+      en: Whether the messaging services are operational (no token needed).
+      ar: ما إذا كانت خدمات الرسائل تعمل (دون رمز).
+    response_example: '{"statusCode":200,"status":{"service":"none","description":"All Services are Operational"}}'
+verification:
+  checked_on: 2026-10-22
+  method: live_request
+  evidence:
+    - https://dev.taqnyat.sa/en/doc/sms/
+    - https://api.taqnyat.sa/system/status

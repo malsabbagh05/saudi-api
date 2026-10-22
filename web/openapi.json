@@ -1,0 +1,2070 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Saudi API Catalogue",
+    "description": "A verified, bilingual (Arabic and English) catalogue of Saudi APIs and the datasets they\npublish. Every text field has `en` and `ar`. Errors are `{\"code\", \"message\"}` with a\nbounded `code`. The same catalogue is available to AI agents over MCP at `/mcp`.\n",
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://github.com/malsabbagh05/saudi-api/blob/main/LICENSE"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/sectors": {
+      "get": {
+        "summary": "Sectors with their API counts",
+        "operationId": "sectors_v1_sectors_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SectorOut"
+                  },
+                  "type": "array",
+                  "title": "Response Sectors V1 Sectors Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/providers": {
+      "get": {
+        "summary": "Providers with their API counts",
+        "operationId": "providers_v1_providers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderSummary"
+                  },
+                  "type": "array",
+                  "title": "Response Providers V1 Providers Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/providers/{slug}": {
+      "get": {
+        "summary": "One provider and its APIs",
+        "operationId": "provider_v1_providers__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/apis": {
+      "get": {
+        "summary": "Search and filter APIs",
+        "operationId": "apis_v1_apis_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Arabic or English words.",
+              "title": "Q"
+            },
+            "description": "Arabic or English words."
+          },
+          {
+            "name": "sector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sector"
+            }
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Provider"
+            }
+          },
+          {
+            "name": "access",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AccessLevel"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access"
+            }
+          },
+          {
+            "name": "auth",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AuthScheme"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Auth"
+            }
+          },
+          {
+            "name": "invocable",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Invocable"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 10000,
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ApiSummary_"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/apis/{slug}": {
+      "get": {
+        "summary": "One API with endpoints, examples and evidence",
+        "operationId": "api_v1_apis__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/apis/{slug}/openapi": {
+      "get": {
+        "summary": "The provider's OpenAPI document, as last fetched",
+        "operationId": "api_openapi_v1_apis__slug__openapi_get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/datasets": {
+      "get": {
+        "summary": "Search statistical datasets",
+        "operationId": "datasets_v1_datasets_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Arabic or English words.",
+              "title": "Q"
+            },
+            "description": "Arabic or English words."
+          },
+          {
+            "name": "api",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 10000,
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_DatasetSummary_"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/datasets/{api_slug}/{dataset_id}": {
+      "get": {
+        "summary": "One dataset with its query",
+        "operationId": "dataset_v1_datasets__api_slug___dataset_id__get",
+        "parameters": [
+          {
+            "name": "api_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Api Slug"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "summary": "APIs and datasets together, best match first",
+        "operationId": "search_v1_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "title": "Q"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchHit"
+                  },
+                  "title": "Response Search V1 Search Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/v1/stats": {
+      "get": {
+        "summary": "Catalogue counts, sync state and the latest job runs",
+        "operationId": "stats_v1_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessLevel": {
+        "type": "string",
+        "enum": [
+          "open",
+          "registration",
+          "approval",
+          "contract",
+          "restricted"
+        ],
+        "title": "AccessLevel"
+      },
+      "AccessOut": {
+        "properties": {
+          "level": {
+            "type": "string",
+            "title": "Level"
+          },
+          "auth": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Auth"
+          },
+          "pricing": {
+            "type": "string",
+            "title": "Pricing"
+          },
+          "api_key": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApiKeyOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Text"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "level",
+          "auth",
+          "pricing",
+          "api_key",
+          "notes"
+        ],
+        "title": "AccessOut"
+      },
+      "AccessSummary": {
+        "properties": {
+          "level": {
+            "type": "string",
+            "title": "Level"
+          },
+          "auth": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Auth"
+          },
+          "pricing": {
+            "type": "string",
+            "title": "Pricing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "level",
+          "auth",
+          "pricing"
+        ],
+        "title": "AccessSummary"
+      },
+      "ApiDetail": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/ProviderRef"
+          },
+          "sectors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sectors"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "access": {
+            "$ref": "#/components/schemas/AccessOut"
+          },
+          "agent_invocation": {
+            "type": "boolean",
+            "title": "Agent Invocation",
+            "description": "True when the MCP tool call_endpoint may request this API's endpoints."
+          },
+          "endpoint_count": {
+            "type": "integer",
+            "title": "Endpoint Count"
+          },
+          "dataset_count": {
+            "type": "integer",
+            "title": "Dataset Count"
+          },
+          "check": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CheckOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "status_note": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Text"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documentation_url": {
+            "type": "string",
+            "title": "Documentation Url"
+          },
+          "openapi_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openapi Url"
+          },
+          "signup_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signup Url"
+          },
+          "terms_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Terms Url"
+          },
+          "base_urls": {
+            "items": {
+              "$ref": "#/components/schemas/BaseUrlOut"
+            },
+            "type": "array",
+            "title": "Base Urls"
+          },
+          "formats": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Formats"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageOut"
+          },
+          "endpoints": {
+            "items": {
+              "$ref": "#/components/schemas/EndpointOut"
+            },
+            "type": "array",
+            "title": "Endpoints"
+          },
+          "spec": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpecOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verification": {
+            "$ref": "#/components/schemas/VerificationOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "summary",
+          "provider",
+          "sectors",
+          "status",
+          "access",
+          "agent_invocation",
+          "endpoint_count",
+          "dataset_count",
+          "check",
+          "description",
+          "status_note",
+          "documentation_url",
+          "openapi_url",
+          "signup_url",
+          "terms_url",
+          "base_urls",
+          "formats",
+          "tags",
+          "usage",
+          "endpoints",
+          "spec",
+          "verification"
+        ],
+        "title": "ApiDetail"
+      },
+      "ApiKeyOut": {
+        "properties": {
+          "in": {
+            "type": "string",
+            "enum": [
+              "header",
+              "query"
+            ],
+            "title": "In"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "in",
+          "name"
+        ],
+        "title": "ApiKeyOut"
+      },
+      "ApiSummary": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/ProviderRef"
+          },
+          "sectors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sectors"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "access": {
+            "$ref": "#/components/schemas/AccessSummary"
+          },
+          "agent_invocation": {
+            "type": "boolean",
+            "title": "Agent Invocation",
+            "description": "True when the MCP tool call_endpoint may request this API's endpoints."
+          },
+          "endpoint_count": {
+            "type": "integer",
+            "title": "Endpoint Count"
+          },
+          "dataset_count": {
+            "type": "integer",
+            "title": "Dataset Count"
+          },
+          "check": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CheckOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "summary",
+          "provider",
+          "sectors",
+          "status",
+          "access",
+          "agent_invocation",
+          "endpoint_count",
+          "dataset_count",
+          "check"
+        ],
+        "title": "ApiSummary"
+      },
+      "AuthScheme": {
+        "type": "string",
+        "enum": [
+          "none",
+          "undisclosed",
+          "api_key",
+          "bearer",
+          "oauth2",
+          "mtls",
+          "basic",
+          "jwt"
+        ],
+        "title": "AuthScheme"
+      },
+      "BaseUrlOut": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "environment"
+        ],
+        "title": "BaseUrlOut"
+      },
+      "CheckOut": {
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "reachable",
+              "http_error",
+              "timeout",
+              "connection_error",
+              "tls_error",
+              "refused_by_policy"
+            ],
+            "title": "Outcome"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Checked At"
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "consecutive_failures": {
+            "type": "integer",
+            "title": "Consecutive Failures"
+          },
+          "last_success_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Success At"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "description": "Where the check ran from; Saudi hosts may block others."
+          }
+        },
+        "type": "object",
+        "required": [
+          "outcome",
+          "checked_at",
+          "http_status",
+          "latency_ms",
+          "consecutive_failures",
+          "last_success_at",
+          "region"
+        ],
+        "title": "CheckOut"
+      },
+      "CodeExample": {
+        "properties": {
+          "language": {
+            "type": "string",
+            "enum": [
+              "curl",
+              "python",
+              "javascript"
+            ],
+            "title": "Language"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "language",
+          "code"
+        ],
+        "title": "CodeExample"
+      },
+      "DatasetDetail": {
+        "properties": {
+          "api_slug": {
+            "type": "string",
+            "title": "Api Slug"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "topic": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "subtopic": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "publisher": {
+            "$ref": "#/components/schemas/PublisherOut"
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Refreshed At"
+          },
+          "measures": {
+            "items": {
+              "$ref": "#/components/schemas/MeasureOut"
+            },
+            "type": "array",
+            "title": "Measures"
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/DimensionOut"
+            },
+            "type": "array",
+            "title": "Dimensions"
+          },
+          "required_dimensions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Required Dimensions"
+          },
+          "query": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Query",
+            "description": "Example arguments for the API's query endpoint (call_endpoint)."
+          },
+          "query_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_slug",
+          "id",
+          "name",
+          "topic",
+          "subtopic",
+          "publisher",
+          "refreshed_at",
+          "measures",
+          "dimensions",
+          "required_dimensions",
+          "query",
+          "query_url"
+        ],
+        "title": "DatasetDetail"
+      },
+      "DatasetSummary": {
+        "properties": {
+          "api_slug": {
+            "type": "string",
+            "title": "Api Slug"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "topic": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "subtopic": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "publisher": {
+            "$ref": "#/components/schemas/PublisherOut"
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Refreshed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_slug",
+          "id",
+          "name",
+          "topic",
+          "subtopic",
+          "publisher",
+          "refreshed_at"
+        ],
+        "title": "DatasetSummary"
+      },
+      "DimensionOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "caption": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "description": "The provider requires this dimension in a query."
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/LevelOut"
+            },
+            "type": "array",
+            "title": "Levels"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "caption",
+          "type",
+          "required",
+          "levels"
+        ],
+        "title": "DimensionOut"
+      },
+      "EndpointOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "The production URL with path parameters unfilled."
+          },
+          "summary": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/ParameterOut"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "response_example": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Example"
+          },
+          "examples": {
+            "items": {
+              "$ref": "#/components/schemas/CodeExample"
+            },
+            "type": "array",
+            "title": "Examples"
+          },
+          "invocable": {
+            "type": "boolean",
+            "title": "Invocable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "method",
+          "path",
+          "url",
+          "summary",
+          "parameters",
+          "response_example",
+          "examples",
+          "invocable"
+        ],
+        "title": "EndpointOut"
+      },
+      "ErrorOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorOut"
+      },
+      "JobOut": {
+        "properties": {
+          "job": {
+            "type": "string",
+            "title": "Job"
+          },
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job",
+          "outcome",
+          "started_at",
+          "finished_at"
+        ],
+        "title": "JobOut"
+      },
+      "LevelOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "caption": {
+            "$ref": "#/components/schemas/Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "caption"
+        ],
+        "title": "LevelOut"
+      },
+      "MeasureOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "caption": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "caption",
+          "unit"
+        ],
+        "title": "MeasureOut"
+      },
+      "OperationOut": {
+        "properties": {
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "method",
+          "path",
+          "summary"
+        ],
+        "title": "OperationOut"
+      },
+      "Page_ApiSummary_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ApiSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[ApiSummary]"
+      },
+      "Page_DatasetSummary_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[DatasetSummary]"
+      },
+      "ParameterOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "in": {
+            "type": "string",
+            "enum": [
+              "path",
+              "query",
+              "header"
+            ],
+            "title": "In"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "example": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Example"
+          },
+          "allowed_values": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allowed Values"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "in",
+          "type",
+          "required",
+          "description",
+          "example",
+          "allowed_values"
+        ],
+        "title": "ParameterOut"
+      },
+      "ProviderOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "website_url": {
+            "type": "string",
+            "title": "Website Url"
+          },
+          "api_count": {
+            "type": "integer",
+            "title": "Api Count"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "apis": {
+            "items": {
+              "$ref": "#/components/schemas/ApiSummary"
+            },
+            "type": "array",
+            "title": "Apis"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "kind",
+          "website_url",
+          "api_count",
+          "description",
+          "apis"
+        ],
+        "title": "ProviderOut"
+      },
+      "ProviderRef": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "kind"
+        ],
+        "title": "ProviderRef"
+      },
+      "ProviderSummary": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "website_url": {
+            "type": "string",
+            "title": "Website Url"
+          },
+          "api_count": {
+            "type": "integer",
+            "title": "Api Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "kind",
+          "website_url",
+          "api_count"
+        ],
+        "title": "ProviderSummary"
+      },
+      "PublisherOut": {
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "url"
+        ],
+        "title": "PublisherOut"
+      },
+      "SearchHit": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "api",
+              "dataset"
+            ],
+            "title": "Kind"
+          },
+          "api_slug": {
+            "type": "string",
+            "title": "Api Slug"
+          },
+          "dataset_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "api_slug",
+          "dataset_id",
+          "name",
+          "summary",
+          "score"
+        ],
+        "title": "SearchHit"
+      },
+      "SectorOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Text"
+          },
+          "api_count": {
+            "type": "integer",
+            "title": "Api Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "api_count"
+        ],
+        "title": "SectorOut"
+      },
+      "SpecOut": {
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Checked At"
+          },
+          "fetched_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fetched At"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "spec_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec Version"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "operation_count": {
+            "type": "integer",
+            "title": "Operation Count"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/components/schemas/OperationOut"
+            },
+            "type": "array",
+            "title": "Operations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "outcome",
+          "checked_at",
+          "fetched_at",
+          "source_url",
+          "spec_version",
+          "title",
+          "operation_count",
+          "operations"
+        ],
+        "title": "SpecOut"
+      },
+      "StatsOut": {
+        "properties": {
+          "apis": {
+            "type": "integer",
+            "title": "Apis"
+          },
+          "providers": {
+            "type": "integer",
+            "title": "Providers"
+          },
+          "sectors": {
+            "type": "integer",
+            "title": "Sectors"
+          },
+          "datasets": {
+            "type": "integer",
+            "title": "Datasets"
+          },
+          "invocable_apis": {
+            "type": "integer",
+            "title": "Invocable Apis"
+          },
+          "catalog_digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Catalog Digest"
+          },
+          "catalog_synced_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Catalog Synced At"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/JobOut"
+            },
+            "type": "array",
+            "title": "Jobs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "apis",
+          "providers",
+          "sectors",
+          "datasets",
+          "invocable_apis",
+          "catalog_digest",
+          "catalog_synced_at",
+          "jobs"
+        ],
+        "title": "StatsOut"
+      },
+      "Text": {
+        "properties": {
+          "en": {
+            "type": "string",
+            "title": "En"
+          },
+          "ar": {
+            "type": "string",
+            "title": "Ar"
+          }
+        },
+        "type": "object",
+        "required": [
+          "en",
+          "ar"
+        ],
+        "title": "Text",
+        "description": "The same text in English and Arabic."
+      },
+      "UsageOut": {
+        "properties": {
+          "agent_invocation": {
+            "type": "boolean",
+            "title": "Agent Invocation"
+          },
+          "max_requests_per_minute": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Requests Per Minute"
+          },
+          "policy_evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Policy Evidence"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Text"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent_invocation",
+          "max_requests_per_minute",
+          "policy_evidence",
+          "notes"
+        ],
+        "title": "UsageOut"
+      },
+      "VerificationOut": {
+        "properties": {
+          "checked_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Checked On"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "checked_on",
+          "method",
+          "evidence"
+        ],
+        "title": "VerificationOut"
+      }
+    }
+  }
+}

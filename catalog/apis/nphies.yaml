@@ -1,0 +1,37 @@
+slug: nphies
+provider: council-of-health-insurance
+name:
+  en: nphies health insurance exchange (FHIR)
+  ar: منصة نفيس لتبادل معاملات التأمين الصحي (FHIR)
+summary:
+  en: The national FHIR messaging exchange for eligibility, prior authorization, claims and payments between providers and insurers.
+  ar: منصة التبادل الوطنية المبنية على FHIR للتحقق من الأهلية والموافقات المسبقة والمطالبات والمدفوعات بين مقدمي الرعاية وشركات التأمين.
+description:
+  en: >-
+    nphies connects healthcare providers and health insurers in Saudi Arabia. Its Healthcare
+    Financial Services implementation guide, built on HL7 FHIR, defines the messages for coverage
+    eligibility, prior and advanced authorization, claim submission and batch claims, payment
+    reconciliation and notification, communication, cancellation and status checks. Each exchange
+    is a FHIR message bundle posted over HTTPS to the receiver's process-message endpoint. Only
+    licensed providers, insurers and third-party administrators connect.
+  ar: >-
+    تربط منصة نفيس مقدمي الرعاية الصحية وشركات التأمين الصحي في المملكة. يحدد دليل تطبيق الخدمات المالية
+    للرعاية الصحية، المبني على معيار HL7 FHIR، رسائل التحقق من الأهلية والموافقات المسبقة والمتقدمة وتقديم
+    المطالبات والمطالبات المجمّعة وتسوية المدفوعات والإشعار بها والمراسلة والإلغاء والاستعلام عن الحالة.
+    كل تبادل حزمة رسائل FHIR تُرسل عبر HTTPS إلى نقطة معالجة الرسائل لدى الطرف المستقبل. لا يتصل بالمنصة
+    إلا مقدمو الرعاية وشركات التأمين وشركات إدارة المطالبات المرخصة.
+sectors: [health]
+tags: [nphies, fhir, health insurance, claims, eligibility, hl7, chi]
+documentation_url: https://portal.nphies.sa/ig/
+access:
+  level: restricted
+  auth: [undisclosed]
+  pricing: unknown
+check:
+  url: https://portal.nphies.sa/ig/
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://portal.nphies.sa/ig/
+    - https://portal.nphies.sa/ig/message-exchange.html

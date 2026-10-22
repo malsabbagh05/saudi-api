@@ -1,0 +1,35 @@
+slug: najiz-developers
+provider: ministry-of-justice
+name:
+  en: Najiz Developers platform
+  ar: منصة ناجز للمطورين
+summary:
+  en: The Ministry of Justice's integration platform for judiciary, enforcement, notarization and real estate exchange services.
+  ar: منصة وزارة العدل للتكامل مع خدمات القضاء والتنفيذ والتوثيق والبورصة العقارية.
+description:
+  en: >-
+    Najiz Developers lets entities integrate their systems with Ministry of Justice services. Its
+    catalogue groups more than sixty products under judiciary, enforcement, notarization and the real
+    estate exchange, each with documentation and a test environment for development without touching
+    production data. Rate limits are stated in each product's documentation. Product documentation
+    and credentials require signing in to the portal.
+  ar: >-
+    تتيح منصة ناجز للمطورين للجهات ربط أنظمتها بخدمات وزارة العدل. يضم دليلها أكثر من ستين منتجاً في
+    القضاء والتنفيذ والتوثيق والبورصة العقارية، لكل منها توثيق وبيئة اختبار للتطوير دون المساس ببيانات
+    الإنتاج. تُذكر حدود معدل الاستخدام في توثيق كل منتج. يتطلب الوصول إلى توثيق المنتجات وبيانات الاعتماد
+    تسجيل الدخول إلى البوابة.
+sectors: [justice, real-estate, government]
+tags: [najiz, judiciary, enforcement, notarization, real estate exchange, moj]
+documentation_url: https://developers.najiz.sa/
+access:
+  level: approval
+  auth: [undisclosed]
+  pricing: unknown
+  notes:
+    en: Sign in to the portal to subscribe to products; integration questions go to takamul@moj.gov.sa.
+    ar: سجّل الدخول إلى البوابة للاشتراك في المنتجات؛ تُرسل استفسارات التكامل إلى takamul@moj.gov.sa.
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://developers.najiz.sa/

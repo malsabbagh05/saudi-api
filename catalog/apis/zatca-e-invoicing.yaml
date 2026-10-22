@@ -1,0 +1,144 @@
+slug: zatca-e-invoicing
+provider: zakat-tax-and-customs-authority
+name:
+  en: ZATCA FATOORA e-invoicing API
+  ar: واجهة فاتورة للفوترة الإلكترونية من هيئة الزكاة والضريبة والجمارك
+summary:
+  en: Onboard e-invoicing solutions and report or clear tax invoices with ZATCA, with a sandbox, a simulation and production.
+  ar: تسجيل حلول الفوترة الإلكترونية والإبلاغ عن الفواتير الضريبية أو اعتمادها لدى الهيئة، مع بيئة اختبار ومحاكاة وإنتاج.
+description:
+  en: >-
+    E-invoice generation solutions integrate with FATOORA to obtain cryptographic stamp identifiers
+    (CSIDs) and submit invoices. Onboarding starts with a certificate signing request (CSR) and a
+    one-time password from the FATOORA portal, which returns a compliance CSID; compliance checks on
+    sample documents follow, then a production CSID. Simplified invoices are reported to ZATCA after
+    issue, and standard (business) invoices are cleared by ZATCA before they are shared with the
+    buyer. Requests carry Accept-Version V2, and after onboarding are authenticated with HTTP Basic
+    using the CSID's binarySecurityToken as the username and its secret as the password. The
+    developer-portal environment is the integration sandbox; simulation mirrors production.
+  ar: >-
+    تتكامل حلول إصدار الفواتير الإلكترونية مع منصة فاتورة للحصول على معرّفات الختم التشفيري (CSID)
+    وإرسال الفواتير. يبدأ التسجيل بطلب توقيع شهادة (CSR) ورمز تحقق لمرة واحدة من بوابة فاتورة، فتعيد
+    المنصة معرّف ختم الامتثال، ثم تأتي فحوص الامتثال على مستندات تجريبية، ثم معرّف ختم الإنتاج. يُبلَّغ
+    عن الفواتير المبسطة بعد إصدارها، وتعتمد الهيئة الفواتير الضريبية القياسية قبل مشاركتها مع المشتري.
+    تحمل الطلبات الترويسة Accept-Version بالقيمة V2، وتُوثَّق بعد التسجيل بالمصادقة الأساسية (Basic)
+    باستخدام binarySecurityToken اسماً للمستخدم والقيمة secret كلمةً للمرور. بيئة بوابة المطورين هي
+    بيئة الاختبار، وبيئة المحاكاة مطابقة للإنتاج.
+sectors: [tax, government, commerce]
+tags: [fatoora, e-invoicing, vat, csid, clearance, reporting]
+documentation_url: https://zatca.gov.sa/en/E-Invoicing/Introduction/Guidelines/Documents/DEVELOPER-PORTAL-MANUAL.pdf
+signup_url: https://sandbox.zatca.gov.sa/
+base_urls:
+  - url: https://gw-fatoora.zatca.gov.sa/e-invoicing/core
+    environment: production
+  - url: https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
+    environment: sandbox
+  - url: https://gw-fatoora.zatca.gov.sa/e-invoicing/simulation
+    environment: sandbox
+formats: [json, xml]
+access:
+  level: registration
+  auth: [basic]
+  pricing: free
+  notes:
+    en: >-
+      The compliance CSID request takes a one-time password (OTP header) from the FATOORA portal
+      instead of Basic credentials. Taxpayers register on FATOORA before using production.
+    ar: >-
+      يأخذ طلب معرّف ختم الامتثال رمز تحقق لمرة واحدة (الترويسة OTP) من بوابة فاتورة بدلاً من
+      بيانات المصادقة الأساسية. يسجل المكلفون في منصة فاتورة قبل استخدام بيئة الإنتاج.
+check:
+  url: https://sandbox.zatca.gov.sa/
+endpoints:
+  - id: compliance-csid
+    method: POST
+    path: /compliance
+    summary:
+      en: Submit a CSR with a portal OTP to obtain a compliance CSID.
+      ar: إرسال طلب توقيع الشهادة مع رمز التحقق للحصول على معرّف ختم الامتثال.
+    parameters:
+      - name: OTP
+        in: header
+        required: true
+        description: { en: One-time password from the FATOORA portal., ar: رمز التحقق لمرة واحدة من بوابة فاتورة. }
+        example: "123345"
+      - name: Accept-Version
+        in: header
+        required: true
+        description: { en: The API version., ar: إصدار الواجهة. }
+        example: V2
+  - id: compliance-invoices
+    method: POST
+    path: /compliance/invoices
+    summary:
+      en: Run the compliance checks on a sample invoice, credit note or debit note.
+      ar: تشغيل فحوص الامتثال على فاتورة أو إشعار دائن أو مدين تجريبي.
+    parameters:
+      - name: Accept-Version
+        in: header
+        required: true
+        description: { en: The API version., ar: إصدار الواجهة. }
+        example: V2
+      - name: Accept-Language
+        in: header
+        description: { en: Language of messages., ar: لغة الرسائل. }
+        example: en
+  - id: production-csid
+    method: POST
+    path: /production/csids
+    summary:
+      en: Exchange the compliance CSID for a production CSID.
+      ar: استبدال معرّف ختم الامتثال بمعرّف ختم الإنتاج.
+    parameters:
+      - name: Accept-Version
+        in: header
+        required: true
+        description: { en: The API version., ar: إصدار الواجهة. }
+        example: V2
+  - id: renew-production-csid
+    method: PATCH
+    path: /production/csids
+    summary:
+      en: Renew a production CSID with a new CSR and OTP.
+      ar: تجديد معرّف ختم الإنتاج بطلب توقيع شهادة جديد ورمز تحقق.
+    parameters:
+      - name: OTP
+        in: header
+        required: true
+        description: { en: One-time password from the FATOORA portal., ar: رمز التحقق لمرة واحدة من بوابة فاتورة. }
+        example: "123345"
+      - name: Accept-Version
+        in: header
+        required: true
+        description: { en: The API version., ar: إصدار الواجهة. }
+        example: V2
+  - id: report-invoice
+    method: POST
+    path: /invoices/reporting/single
+    summary:
+      en: Report a simplified invoice, credit note or debit note.
+      ar: الإبلاغ عن فاتورة مبسطة أو إشعار دائن أو مدين.
+    parameters:
+      - name: Accept-Version
+        in: header
+        required: true
+        description: { en: The API version., ar: إصدار الواجهة. }
+        example: V2
+  - id: clear-invoice
+    method: POST
+    path: /invoices/clearance/single
+    summary:
+      en: Clear a standard invoice, credit note or debit note before sharing it with the buyer.
+      ar: اعتماد فاتورة ضريبية قياسية أو إشعار دائن أو مدين قبل مشاركته مع المشتري.
+    parameters:
+      - name: Accept-Version
+        in: header
+        required: true
+        description: { en: The API version., ar: إصدار الواجهة. }
+        example: V2
+verification:
+  checked_on: 2026-10-22
+  method: live_request
+  evidence:
+    - https://zatca.gov.sa/en/E-Invoicing/Introduction/Guidelines/Documents/DEVELOPER-PORTAL-MANUAL.pdf
+    - https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/compliance

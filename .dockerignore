@@ -1,0 +1,16 @@
+# Nothing but what the image needs: never environment files, local state or agent folders.
+.git
+.github
+.agents
+.claude
+.impeccable
+.venv
+.ruff_cache
+.pytest_cache
+**/__pycache__
+.env
+.env.*
+web
+tests
+docs
+*.md

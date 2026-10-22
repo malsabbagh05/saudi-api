@@ -1,0 +1,40 @@
+name: Dependency scan
+
+# Scans the lockfiles of development with Trivy once a day and fails when a high or
+# critical vulnerability has a fix. Static checks scan each pull request for secrets.
+# GitHub starts scheduled runs only from the default branch, so this workflow must
+# also be on main to be active.
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    name: Scan development
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout development
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: development
+          persist-credentials: false
+
+      - name: Install Trivy
+        run: scripts/ci/install-trivy.sh
+
+      # Findings without a usable fix are listed, with their reasons, in .trivyignore.
+      - name: Scan lockfiles
+        run: |
+          set -o pipefail
+          "$RUNNER_TEMP/trivy" fs --scanners vuln --include-dev-deps \
+            --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 \
+            --format table --quiet . | tee -a "$GITHUB_STEP_SUMMARY"
