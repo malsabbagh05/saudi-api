@@ -84,20 +84,22 @@ class OutboundResponse:
 
 
 class HostBudget:
-    """A per-host token bucket: `per_minute` requests, refilled continuously."""
+    """A per-host token bucket: `per_minute` requests, refilled continuously. A share
+    below one request a minute still holds one token, so it is never unusable."""
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
         self._buckets: dict[str, tuple[float, float]] = {}
 
-    def take(self, host: str, per_minute: int, *, wait_seconds: float = 0.0) -> None:
+    def take(self, host: str, per_minute: float, *, wait_seconds: float = 0.0) -> None:
         """Take one token, waiting up to `wait_seconds`; refuse when none comes."""
         deadline = time.monotonic() + wait_seconds
+        capacity = max(1.0, per_minute)
         while True:
             with self._lock:
                 now = time.monotonic()
-                tokens, updated = self._buckets.get(host, (float(per_minute), now))
-                tokens = min(float(per_minute), tokens + (now - updated) * per_minute / 60.0)
+                tokens, updated = self._buckets.get(host, (capacity, now))
+                tokens = min(capacity, tokens + (now - updated) * per_minute / 60.0)
                 if tokens >= 1.0:
                     self._buckets[host] = (tokens - 1.0, now)
                     return
@@ -171,7 +173,8 @@ class OutboundClient:
             target = self._check(current, allowed_hosts)
             if per_minute is not None:
                 wait = max(0.0, deadline - time.monotonic()) if wait_for_budget else 0.0
-                self.budget.take(target.host, per_minute, wait_seconds=wait)
+                share = per_minute / self.settings.outbound_processes
+                self.budget.take(target.host, share, wait_seconds=wait)
             status, headers, body = self._send(target, accept, limit, deadline)
             location = headers.get("location")
             if status in _REDIRECTS and location:

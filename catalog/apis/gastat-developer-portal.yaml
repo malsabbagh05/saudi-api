@@ -1,0 +1,37 @@
+slug: gastat-developer-portal
+provider: general-authority-for-statistics
+name:
+  en: GASTAT developer portal
+  ar: بوابة المطورين في الهيئة العامة للإحصاء
+summary:
+  en: The General Authority for Statistics' API management portal, open to developers who register.
+  ar: بوابة إدارة واجهات برمجة التطبيقات في الهيئة العامة للإحصاء، متاحة للمطورين بعد التسجيل.
+description:
+  en: >-
+    GASTAT runs its own API management portal on stats.gov.sa. Anyone can create an account on the
+    portal, with an email address or through Nafath. The list of API products, their documentation
+    and how calls are authenticated are shown only after signing in, so this entry lists no endpoints.
+    For keyless access to GASTAT statistics without an account, use DataSaudi, which republishes them.
+  ar: >-
+    تدير الهيئة العامة للإحصاء بوابتها الخاصة لإدارة واجهات برمجة التطبيقات على نطاق stats.gov.sa.
+    يمكن لأي شخص إنشاء حساب في البوابة بالبريد الإلكتروني أو عبر نفاذ. لا تظهر قائمة منتجات الواجهات
+    وتوثيقها وطريقة توثيق الطلبات إلا بعد تسجيل الدخول، لذلك لا يذكر هذا الإدخال نقاط نهاية. وللوصول إلى
+    إحصاءات الهيئة دون حساب ودون مفتاح، استخدم منصة داتا السعودية التي تعيد نشرها.
+sectors: [statistics, government]
+tags: [gastat, statistics, developer portal, nafath]
+documentation_url: https://dp.stats.gov.sa/dashboard
+access:
+  level: registration
+  auth: [undisclosed]
+  pricing: unknown
+  notes:
+    en: Register on the portal (email or Nafath), then sign in to see the API products and how to use them.
+    ar: سجّل في البوابة (بالبريد الإلكتروني أو عبر نفاذ)، ثم سجّل الدخول لعرض منتجات الواجهات وطريقة استخدامها.
+check:
+  url: https://dp.stats.gov.sa/dashboard
+verification:
+  checked_on: 2026-10-22
+  method: official_documentation
+  evidence:
+    - https://dp.stats.gov.sa/dashboard
+    - https://dp-identity.stats.gov.sa/realms/gstat/.well-known/openid-configuration
