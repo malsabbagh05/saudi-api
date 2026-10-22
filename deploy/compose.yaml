@@ -1,0 +1,116 @@
+# The production stack of ADR-005: one Oracle Cloud Always Free VM. The procedure is
+# docs/development/deployment.md. Run from the repository root on the VM:
+#
+#   docker compose --env-file /srv/saudi-api/.env.production -f deploy/compose.yaml up -d --build
+#
+# The env file holds the settings and secrets (deploy/env.production.example); it is never
+# committed. SITE_ADDRESS is the one hostname: every public URL below derives from it.
+name: saudi-api
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-app: &app
+  image: saudi-api:production
+  pull_policy: never
+  restart: unless-stopped
+  env_file: ${ENV_FILE:-/srv/saudi-api/.env.production}
+  environment:
+    ENVIRONMENT: production
+    DATABASE_URL: postgresql+psycopg://saudi_api:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/saudi_api
+    PUBLIC_BASE_URL: https://${SITE_ADDRESS:?set SITE_ADDRESS}
+    WEB_BASE_URL: https://${SITE_ADDRESS}
+    MCP_ALLOWED_HOSTS: ${SITE_ADDRESS}
+    # The API and the worker call providers (ADR-004).
+    OUTBOUND_PROCESSES: "2"
+  logging: *logging
+
+services:
+  db:
+    image: postgres:18@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: saudi_api
+      POSTGRES_USER: saudi_api
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "saudi_api", "-d", "saudi_api"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    logging: *logging
+
+  # The release steps before traffic: migrations, then the catalogue projection (ADR-002).
+  release:
+    <<: *app
+    build: ..
+    restart: "no"
+    command: ["sh", "-c", "saudi-api migrate && saudi-api catalog sync"]
+    # The image's healthcheck probes the HTTP server, which only the api service runs.
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    <<: *app
+    command: ["saudi-api", "serve", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      release:
+        condition: service_completed_successfully
+
+  worker:
+    <<: *app
+    command: ["saudi-api", "worker"]
+    healthcheck:
+      disable: true
+    depends_on:
+      release:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: ../web
+      # Read while the static shell is built (web/Dockerfile).
+      args:
+        PUBLIC_API_URL: https://${SITE_ADDRESS}
+        NEXT_PUBLIC_SITE_URL: https://${SITE_ADDRESS}
+    image: saudi-api-web:production
+    restart: unless-stopped
+    environment:
+      API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+    logging: *logging
+
+  # TLS with automatic certificates, and the one public entry (deploy/Caddyfile).
+  caddy:
+    image: caddy:2@sha256:504a44d7d74bd2bc28a66afc4774912fc21223ca8a67734af1c54ab2f999b489
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - api
+      - web
+    logging: *logging
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:

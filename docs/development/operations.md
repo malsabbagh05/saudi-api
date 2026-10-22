@@ -1,8 +1,8 @@
 # Operations
 
-How the services run, release and report. Choosing where they run is the project owner's
-decision, recorded in an ADR before the first deployment (`AGENTS.md`); `compose.yaml` and
-the Dockerfiles build and run the stack locally and are not that decision.
+How the services run, release and report. Where they run is decided in
+[ADR-005](../architecture/adr-005-deployment.md), and [Deployment](./deployment.md) is the
+procedure with `deploy/compose.yaml`. The root `compose.yaml` runs the stack locally only.
 
 ## Processes
 
