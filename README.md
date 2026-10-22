@@ -24,12 +24,12 @@ The same catalogue is served three ways:
 
 ## What is in the catalogue
 
-21 APIs from 17 providers in 16 sectors, and 252 statistical datasets (2026-10-22),
-including DataSaudi (GASTAT, SAMA, Ministry of Health statistics), the National Address,
-ZATCA FATOORA e-invoicing, Wathq commercial registration, company contracts, real estate
-deeds, powers of attorney and employee information, Najiz, nphies, SAMA Open Banking, Al
-Rajhi Bank, Lean, Moyasar, Tamara, Tabby, Salla, Zid, Taqnyat and Riyadh's open data
-(metro, bus, traffic). The catalogue grows by reviewed pull requests; see
+22 APIs from 18 providers in 16 sectors, and 252 statistical datasets (2026-10-22),
+including DataSaudi (GASTAT, SAMA, Ministry of Health statistics), the GASTAT developer
+portal, the National Address, ZATCA FATOORA e-invoicing, Wathq commercial registration,
+company contracts, real estate deeds, powers of attorney and employee information, Najiz,
+nphies, SAMA Open Banking, Al Rajhi Bank, Lean, Moyasar, Tamara, Tabby, Salla, Zid, Taqnyat
+and Riyadh's open data (metro, bus, traffic). The catalogue grows by reviewed pull requests; see
 [Contributing](#contributing).
 
 ## Quick start
