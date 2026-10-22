@@ -1,0 +1,86 @@
+slug: geidea-payments
+provider: geidea
+name:
+  en: Geidea Online Payments API
+  ar: واجهة جيديا للمدفوعات الإلكترونية
+summary:
+  en: Checkout sessions, payment links and invoices, refunds and subscriptions for merchants on Geidea's Saudi platform.
+  ar: جلسات الدفع وروابط الدفع والفواتير والاسترداد والاشتراكات للتجار على منصة جيديا في السعودية.
+description:
+  en: >-
+    Geidea's payment gateway API creates checkout sessions for its hosted payment page and SDKs,
+    sends payment links and invoices by email or SMS, captures, voids and refunds transactions,
+    stores card tokens and runs subscriptions. Requests authenticate with HTTP Basic: the merchant's
+    Public Key is the username and the API Password is the password. Creating a session or a refund
+    also needs a request signature, as the reference describes. Saudi merchants call the Saudi
+    production host; the UAE and Egypt have hosts of their own. Direct card APIs require PCI DSS
+    compliance, and pre-authorisation and capture are enabled per merchant on the Saudi platform.
+  ar: >-
+    تنشئ واجهة بوابة الدفع لدى جيديا جلسات الدفع لصفحة الدفع المستضافة وحزم التطوير، وترسل روابط الدفع
+    والفواتير بالبريد الإلكتروني أو الرسائل النصية، وتقبض المعاملات وتلغيها وتستردها، وتحفظ رموز
+    البطاقات، وتدير الاشتراكات. تُوثَّق الطلبات بالمصادقة الأساسية (Basic): المفتاح العام للتاجر اسماً
+    للمستخدم وكلمة مرور الواجهة كلمةً للمرور. ويحتاج إنشاء الجلسة أو الاسترداد أيضاً إلى توقيع للطلب كما
+    يصفه المرجع. يستدعي التجار في السعودية خادم الإنتاج السعودي، وللإمارات ومصر خوادم خاصة بهما. تتطلب
+    واجهات البطاقات المباشرة الامتثال لمعيار PCI DSS، ويُفعَّل التفويض المسبق والقبض لكل تاجر على حدة في
+    المنصة السعودية.
+sectors: [payments, finance]
+tags: [payment gateway, payment links, invoices, refunds, subscriptions, cards]
+documentation_url: https://docs.geidea.net/docs/overview
+base_urls:
+  - url: https://api.ksamerchant.geidea.net
+formats: [json]
+access:
+  level: approval
+  auth: [basic]
+  pricing: unknown
+  notes:
+    en: Geidea's enablement team emails the merchant's Public Key and API Password; the merchant portal also shows them.
+    ar: يرسل فريق التفعيل لدى جيديا المفتاح العام وكلمة مرور الواجهة إلى التاجر بالبريد الإلكتروني، وتظهر أيضاً في بوابة التاجر.
+check:
+  url: https://docs.geidea.net/docs/overview
+endpoints:
+  - id: create-session
+    method: POST
+    path: /payment-intent/api/v2/direct/session
+    summary:
+      en: Create a checkout session for the hosted payment page or an SDK.
+      ar: إنشاء جلسة دفع لصفحة الدفع المستضافة أو لحزمة تطوير.
+  - id: fetch-order
+    method: GET
+    path: /pgw/api/v1/direct/order/{orderId}
+    summary:
+      en: Fetch one transaction or order.
+      ar: جلب معاملة أو طلب واحد.
+    parameters:
+      - name: orderId
+        in: path
+        required: true
+        description: { en: The order id., ar: معرّف الطلب. }
+        example: 00000000-0000-4000-8000-000000000000
+  - id: fetch-payment-link
+    method: GET
+    path: /payment-intent/api/v1/direct/eInvoice/{paymentIntentId}
+    summary:
+      en: Fetch one payment link or invoice.
+      ar: جلب رابط دفع أو فاتورة واحدة.
+    parameters:
+      - name: paymentIntentId
+        in: path
+        required: true
+        description: { en: The payment intent id., ar: معرّف نية الدفع. }
+        example: 00000000-0000-4000-8000-000000000000
+  - id: refund
+    method: POST
+    path: /pgw/api/v2/direct/refund
+    summary:
+      en: Refund a transaction in full or in part.
+      ar: استرداد معاملة كلياً أو جزئياً.
+verification:
+  checked_on: 2026-10-23
+  method: official_documentation
+  evidence:
+    - https://docs.geidea.net/docs/overview
+    - https://docs.geidea.net/docs/pre-requisites
+    - https://docs.geidea.net/docs/pg-direct-api
+    - https://docs.geidea.net/reference/create-session-v2-1
+    - https://docs.geidea.net/reference/get-order-by-id-1
