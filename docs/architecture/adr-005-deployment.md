@@ -1,110 +1,100 @@
-# ADR-005: First deployment on Google Cloud in Dammam
+# ADR-005: First deployment on Oracle Cloud Always Free in Saudi Arabia
 
-- Status: proposed
-- Date: 2026-10-22
-- Deciders: @malsabbagh05 (project owner); proposed, not yet accepted
+- Status: accepted
+- Date: 2026-10-23
+- Deciders: @malsabbagh05 (project owner) chose Oracle Cloud Always Free in a Saudi region
+  on 2026-10-23, and delegated the remaining choices the same day
 - Issue: [#2](https://github.com/malsabbagh05/saudi-api/issues/2)
 
 ## Context
 
 The platform has no deployment path, and `AGENTS.md` ("Development environment") requires
-one in an ADR before the first deployment. CI builds and checks; it never deploys. The
-Dockerfiles and `compose.yaml` are for building and local running only (ADR-001).
+one in an ADR before the first deployment. CI builds and checks; it never deploys.
 
-The project owner decided on 2026-10-22 that the first deployment runs in a Saudi cloud
-region. Several `.gov.sa` hosts refuse connections from outside the Kingdom (ADR-004,
+The project owner decided on 2026-10-22 that the first deployment runs in a Saudi region:
+several `.gov.sa` hosts refuse connections from outside the Kingdom (ADR-004,
 "Consequences"), so reachability checks and agent calls are only complete from inside it.
+On 2026-10-23 the owner compared the options below and chose Oracle Cloud Always Free.
 
-The deployment has to keep these rules from earlier records:
-
-- ADR-002: each release runs `alembic upgrade head` and then `saudi-api catalog sync`
-  before traffic; readiness fails while the projection is stale.
-- ADR-004: provider traffic should leave through an egress path that denies private
-  ranges; the per-host request budget is per process, so the deployment states how many
-  processes call providers.
-- `AGENTS.md`: integrations never use the host's ambient identity. The project's own
-  infrastructure (its database and secret store) keeps its deployment identity.
-
-Saudi regions with a managed PostgreSQL service, checked on 2026-10-22:
-
-| Provider | Saudi region | Managed PostgreSQL | Source |
+| Option, checked 2026-10-22 and 23 | In Saudi Arabia | Cost a month | Database |
 | --- | --- | --- | --- |
-| Google Cloud | `me-central2` (Dammam), live since 2023 | Cloud SQL lists `me-central2`; PostgreSQL 18 is generally available in Cloud SQL since 2025-11-20 | [Google, 2023-11-15](https://www.googlecloudpresscorner.com/2023-11-15-Google-Cloud-Expands-Regional-Presence-with-Opening-of-Dammam-Cloud-Region-Forecast-to-Boost-Economy-by-USD-109-Billion-by-2030), [Cloud Run locations](https://docs.cloud.google.com/run/docs/locations), [Cloud SQL regions](https://docs.cloud.google.com/sql/docs/postgres/region-availability-overview), [Cloud SQL release notes](https://docs.cloud.google.com/sql/docs/postgres/release-notes) |
-| Oracle Cloud | `me-jeddah-1`, `me-riyadh-1` | OCI Database with PostgreSQL supports up to 17 (added 2026-04-29); Jeddah allows two database systems per tenancy | [OCI PostgreSQL release notes](https://docs.oracle.com/en-us/iaas/releasenotes/services/postgresql), [known issues](https://docs.oracle.com/en-us/iaas/Content/postgresql/known-issues.htm) |
-| Microsoft Azure | Saudi Arabia East, announced for November 2026 | not live | [Microsoft, 2026-08](https://news.microsoft.com/source/emea/2026/08/microsoft-announces-saudi-arabia-east-datacenter-region-will-be-available-in-november-2026/) |
-| AWS | announced for December 2026 | not live | [Amazon](https://www.aboutamazon.com/news/aws/aws-cloud-region-saudi-arabia) |
+| Oracle Cloud Always Free, Jeddah or Riyadh | yes | $0 within the Always Free limits | PostgreSQL 18 in a container, run by this project |
+| Google Cloud, Dammam (`me-central2`) | yes | paid; Invoiced Billing or CNTXT required ([Dammam access](https://docs.cloud.google.com/docs/dammam-region-access)) | Cloud SQL for PostgreSQL 18 |
+| AWS | not until the Saudi region opens, targeted for December 2026 ([AWS](https://aws.amazon.com/blogs/migration-and-modernization/how-to-plan-your-migration-to-the-aws-region-in-saudi-arabia/)); UAE (`me-central-1`) meanwhile | ≈ $36 for one t4g.medium VM, from AWS's price list files | RDS or a container |
 
-Google Cloud's Dammam region has an access condition: "If you have a KSA billing address,
-you are required to purchase Google Cloud services ... through CNTXT", and a customer
-billed outside the Kingdom needs Invoiced Billing to reach the region
-([Dammam region access](https://docs.cloud.google.com/docs/dammam-region-access), updated
-2026-10-20).
+Oracle's Always Free resources
+([Always Free resources](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm)):
+
+- Arm Ampere A1 compute equal to 2 OCPUs and 12 GB of memory, 200 GB of block volume
+  storage in total, and two AMD micro instances, all in the tenancy's home region, which is
+  chosen at sign-up and cannot change. The Free Tier excludes only US Government Cloud
+  regions ([Free Tier](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm)).
+- "Idle Always Free compute instances may be reclaimed by Oracle": an instance whose
+  95th-percentile CPU, network and (for A1) memory use all stay under 20% for 7 days.
+
+The database holds no state of its own (ADR-002). The curated tables are a projection of
+`catalog/` that `saudi-api catalog sync` rebuilds, the discovery job rebuilds the datasets,
+and the observations are the latest check, specification and job run, which the jobs
+refresh. Rebuilding them is the recovery.
+
+TLS needs a hostname. Let's Encrypt limits certificates per registered domain, which it
+finds with the Public Suffix List
+([rate limits](https://letsencrypt.org/docs/rate-limits/)). `sslip.io` and `nip.io` are
+not on that list, so all their users share one limit; `duckdns.org` is on it, so each
+DuckDNS subdomain has its own (checked against
+[the list](https://publicsuffix.org/list/public_suffix_list.dat) on 2026-10-23).
 
 ## Decision
 
-- **Provider and region**: Google Cloud, `me-central2` (Dammam). The billing account is
-  bought through CNTXT when the billing address is in the Kingdom, and set up for
-  Invoiced Billing otherwise.
-- **Images**: the repository's `Dockerfile` and `web/Dockerfile`, built from a tagged
-  revision of `main` and pushed to Artifact Registry in `me-central2`.
-- **API and web**: two Cloud Run services, `api` (`saudi-api serve`) and `web` (the
-  Next.js standalone server). The API runs at most 2 instances and the web at most 4.
-- **Release**: a Cloud Run job, `release`, runs `saudi-api migrate` and then
-  `saudi-api catalog sync`. A deployment creates the new API revision without traffic,
-  runs `release`, and moves traffic only after the new revision's readiness probe passes.
-- **Scheduled jobs**: Cloud Scheduler starts three Cloud Run jobs, `discover`, `check` and
-  `refresh-specs`, each running `saudi-api jobs run <job>` on the intervals of the
-  settings. ADR-004 already allows this model, and its advisory lock keeps one run per
-  job. The long-running `saudi-api worker` stays for local and self-hosted use.
-- **Request budget across processes**: at most 2 API processes and 3 job processes call
-  providers at once. Before the first deployment, the per-host budget either divides each
-  catalogue budget by that count (a setting) or moves to one shared authority in
-  PostgreSQL. That change has its own pull request.
-- **Database**: Cloud SQL for PostgreSQL 18, Enterprise edition, in `me-central2`, on a
-  private IP only, with automated daily backups and point-in-time recovery. Cloud SQL is
-  the one authority for the database state (ADR-002).
-- **Egress**: Cloud Run sends all traffic through Direct VPC egress. VPC firewall egress
-  rules deny `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `100.64.0.0/10` and
-  `169.254.0.0/16`, with a higher-priority allow for the Cloud SQL private range. Cloud NAT
-  with a reserved static address carries the provider traffic, so providers see one
-  address. `outbound.py` keeps its own checks (ADR-004).
-- **Secrets and identity**: Secret Manager holds the database password. Each service and
-  job runs as its own service account: `api` and the jobs may read that secret and connect
-  to Cloud SQL; `web` has no role. No provider credential exists to store (ADR-004).
-- **Public entry**: a global external Application Load Balancer with serverless network
-  endpoint groups and Google-managed certificates serves the web, `/v1`, `/llms.txt` and
-  `/mcp`. The domain is the project owner's decision; `PUBLIC_BASE_URL`, `WEB_BASE_URL`
-  and `MCP_ALLOWED_HOSTS` follow it (`docs/development/configuration.md`).
-- **Logs**: Cloud Logging, with the log bucket located in `me-central2` and the default
-  30-day retention. The application does not log client addresses (`cli.py` turns off
-  uvicorn's access log), but Cloud Run and the load balancer write request logs that
-  include them, so those logs stay in the region.
-- **Deployment path**: `docs/development/deployment.md` records the commands. The project
-  owner runs them from a clean, tagged checkout of `main`. CI never deploys.
-- **Region label**: `CHECK_REGION=gcp-me-central2`, so each reachability check shows where
-  it ran from.
+- **Host**: one `VM.Standard.A1.Flex` instance with 2 OCPUs and 12 GB of memory, running
+  Ubuntu 24.04 for Arm, in the tenancy's home region: Riyadh (`me-riyadh-1`), or Jeddah
+  (`me-jeddah-1`) when Riyadh has no A1 capacity at sign-up. Its boot volume is 100 GB of
+  the 200 GB allowance.
+- **Account**: upgraded to Pay As You Go with a budget alert at $1, so a resource outside
+  Always Free is noticed at once. Oracle's reclamation notices offer this upgrade to keep an
+  idle instance; its documentation does not say so, so the deployment also watches for a
+  stopped instance (see `docs/development/deployment.md`).
+- **Stack**: `deploy/compose.yaml` runs `db` (`postgres:18`, password authentication, a
+  named volume), `release` (`saudi-api migrate`, then `saudi-api catalog sync`), `api`,
+  `worker`, `web` and `caddy`. The images build on the VM from a tagged checkout of `main`;
+  the base images are multi-architecture, so the same Dockerfiles build for Arm. Only
+  `caddy` publishes ports (80 and 443).
+- **One hostname**: Caddy serves HTTPS with automatic certificates and sends `/v1/*`,
+  `/mcp`, `/llms.txt`, `/healthz`, `/readyz`, `/openapi.json` and `/docs` to the API and
+  everything else to the web directory. `SITE_ADDRESS` names the host; until a domain is
+  bought it is a free DuckDNS subdomain.
+- **Request budget**: `OUTBOUND_PROCESSES=2`, the API and the worker (ADR-004, #6).
+- **Secrets**: the database password and the settings live in `/srv/saudi-api/.env.production`
+  on the VM, mode 600, never committed (`AGENTS.md`).
+- **Egress**: `outbound.py` keeps its rules (ADR-004). The host adds one rule in Docker's
+  `DOCKER-USER` chain that drops container traffic to `169.254.0.0/16`, so no container
+  reaches the instance metadata service. ADR-004's egress proxy is not needed:
+  `outbound.py` pins each connection to the address it checked, which is the rebinding
+  case the proxy was for.
+- **Backups**: none. A lost database is rebuilt by running the release step and the jobs.
+- **Logs**: Docker's `json-file` driver, rotated at 10 MB with 3 files per service.
+- **Region label**: `CHECK_REGION` is `oci-me-riyadh-1` or `oci-me-jeddah-1`.
+- **Deployment path**: `docs/development/deployment.md`. It is run on the VM from a tagged
+  checkout of `main`; CI never deploys.
 
 ## Alternatives considered
 
-- **Oracle Cloud in Riyadh or Jeddah**: live in the Kingdom, but its managed PostgreSQL
-  stops at 17 while ADR-001 decided 18, and Jeddah allows two database systems per
-  tenancy.
-- **Azure Saudi Arabia East or the AWS Saudi region**: neither is live on 2026-10-22.
-  Revisit after launch if their managed PostgreSQL offers 18 in the region.
-- **One virtual machine running `compose.yaml` in a Saudi region**: the fewest moving
-  parts, but this project would then own operating system patching, TLS renewal, backups
-  and a database server, and `compose.yaml` is not reviewed as a production path
-  (ADR-001).
-- **A region outside the Kingdom**: providers that refuse foreign networks would show as
-  unreachable, and agents could not call them.
+- **Google Cloud in Dammam**: managed and in the Kingdom, but paid, and it needs Invoiced
+  Billing or a purchase through CNTXT.
+- **AWS**: no Saudi region until it opens; the UAE region costs about $36 a month for the
+  same single-VM design, and `.gov.sa` reachability from it is untested.
+- **OCI Database with PostgreSQL**: managed but paid, and it offers PostgreSQL up to 17
+  ([release notes](https://docs.oracle.com/en-us/iaas/releasenotes/services/postgresql)),
+  while ADR-001 decided 18.
+- **A `sslip.io` hostname**: no sign-up, but every user of `sslip.io` shares one
+  certificate limit.
 
 ## Consequences
 
-- Before acceptance, the project owner confirms in the console or with `gcloud` that a
-  PostgreSQL 18 instance can be created in `me-central2`. The release notes list
-  PostgreSQL 18 regions without naming Dammam.
-- The procurement path (CNTXT or Invoiced Billing) comes before any resource exists.
-- Before the first deployment, the request budget holds across processes (see
-  Decision), `docs/development/deployment.md` exists, and the public domain is chosen.
-- Cloud Run in Dammam is billed at Tier 2 prices.
-- A later change of provider or region supersedes this record.
+- One VM: a reboot or an upgrade is a short outage, and a lost instance is rebuilt from the
+  deployment document. The project accepts this for a free first deployment.
+- If Oracle reclaims the instance, or A1 capacity is unavailable, a later ADR moves the
+  deployment; the stack and the document carry over to any Ubuntu host with Docker.
+- Moving to a bought domain changes `SITE_ADDRESS` and the public URLs in the settings,
+  and rebuilds the web image.
+- The Google Cloud design this record first proposed (2026-10-22) is not pursued.

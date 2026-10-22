@@ -1,0 +1,19 @@
+# One hostname for the whole platform (ADR-005). Caddy obtains and renews its certificate.
+{
+	email {$ACME_EMAIL}
+}
+
+{$SITE_ADDRESS} {
+	# HTTPS only, remembered by browsers for a year (OWASP HTTP Strict Transport Security).
+	header Strict-Transport-Security "max-age=31536000"
+
+	# The API's own paths; everything else is the web directory.
+	@api path /v1/* /mcp /llms.txt /healthz /readyz /openapi.json /docs /docs/*
+	handle @api {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+}
