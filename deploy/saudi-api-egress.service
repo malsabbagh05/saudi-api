@@ -1,0 +1,18 @@
+# Drops container traffic to the link-local range, so no container reaches the instance
+# metadata service (ADR-005, AGENTS.md "Architecture"). Docker evaluates DOCKER-USER before
+# its own rules; the host's own traffic does not pass through it.
+# Install: sudo cp deploy/saudi-api-egress.service /etc/systemd/system/ && sudo systemctl enable --now saudi-api-egress
+[Unit]
+Description=saudi-api: drop container traffic to 169.254.0.0/16
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'iptables -C DOCKER-USER -d 169.254.0.0/16 -j DROP 2>/dev/null || iptables -I DOCKER-USER -d 169.254.0.0/16 -j DROP'
+ExecStop=/bin/sh -c 'iptables -D DOCKER-USER -d 169.254.0.0/16 -j DROP 2>/dev/null || true'
+
+[Install]
+WantedBy=multi-user.target

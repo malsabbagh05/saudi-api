@@ -139,8 +139,8 @@ replaces one:
   them into task worktrees, and never use one environment's file for another.
   git-standards ("Worktree environment") owns how task worktrees reach them.
 - CI builds and checks; it never deploys. Deploy only through the reviewed
-  deployment path. There is none yet: `@malsabbagh05` sets it, in an ADR, before
-  the first deployment.
+  deployment path: `docs/development/deployment.md`, decided in
+  [ADR-005](docs/architecture/adr-005-deployment.md).
 - Never run `docker compose down -v`, flush a shared search index, drop shared
   database state, clear shared object storage, stop Docker globally, or prune
   unfiltered resources.

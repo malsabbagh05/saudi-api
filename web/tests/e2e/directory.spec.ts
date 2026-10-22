@@ -28,6 +28,19 @@ test.describe("locales", () => {
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   });
 
+  test("a path without a locale redirects to one", async ({ request }) => {
+    const response = await request.get("/apis", { maxRedirects: 0 });
+    expect(response.status()).toBe(307);
+    expect(response.headers()["location"]).toMatch(/\/en\/apis$/);
+  });
+
+  test("an unknown first segment answers 404, not an error", async ({ request }) => {
+    // Redirected by the proxy to /en/no-such-page.
+    expect((await request.get("/no-such-page")).status()).toBe(404);
+    // A dot keeps the proxy out, so the segment reaches the [locale] layout as is.
+    expect((await request.get("/no.such/apis")).status()).toBe(404);
+  });
+
   test("unknown pages show the localized not-found page", async ({ page }) => {
     const response = await page.goto("/ar/no-such-page");
     expect(response?.status()).toBe(404);
